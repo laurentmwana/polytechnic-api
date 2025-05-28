@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Other\OptionController;
 use App\Http\Controllers\Api\Other\DepartmentController;
+use App\Http\Controllers\Api\Other\YearCurrentController;
+use App\Http\Controllers\Api\Other\LevelController;
 
 Route::get('/departments', [DepartmentController::class, 'index']);
 Route::get('/department/{id}', [DepartmentController::class, 'show']);
@@ -10,5 +12,7 @@ Route::get('/department/{id}', [DepartmentController::class, 'show']);
 Route::get('/options', [OptionController::class, 'index']);
 Route::get('/option/{id}', [OptionController::class, 'show']);
 
+Route::get('/year/current', YearCurrentController::class);
 
-Route::get('/year/current', YearCurrentCOntroller::class);
+Route::get('/levels', [LevelController::class, 'index']);
+Route::get('/level/{id}', [LevelController::class, 'show']);

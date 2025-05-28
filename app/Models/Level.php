@@ -19,7 +19,7 @@ class Level extends Model
     }
 
 
-    public function year(): BelongsTo
+    public function yearAcademic(): BelongsTo
     {
         return $this->belongsTo(YearAcademic::class);
     }

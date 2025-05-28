@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Resources\Department;
+namespace App\Http\Resources\Level;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\Year\YearItemResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Option\OptionActionResource;
 
-class DepartmentItemResource extends JsonResource
+class LevelActionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,9 +20,8 @@ class DepartmentItemResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'alias' => $this->alias,
-            'options' => OptionActionResource::collection($this->options),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'option' => new OptionActionResource($this->option),
+            'year' => new YearItemResource($this->yearAcademic),
         ];
     }
 }

@@ -11,7 +11,9 @@ class OptionController extends Controller
 {
     public function index()
     {
-        $options = Option::query()->findPaginated();
+        $options = Option::with(['department'])
+            ->orderByDesc('updated_at')
+            ->paginate();
 
         return OptionCollectionResource::collection($options);
     }
@@ -19,7 +21,7 @@ class OptionController extends Controller
 
     public function show(string $id)
     {
-        $option = Option::query()->findOneOrThrow($id);
+        $option = Option::findOrFail($id);
 
         return new OptionItemResource($option);
     }

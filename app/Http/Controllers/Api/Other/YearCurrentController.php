@@ -10,7 +10,11 @@ class YearCurrentController extends Controller
 {
     public function __invoke()
     {
-        $year = YearAcademic::where('is_closed', '=', true)->first();
+        $year = YearAcademic::where('is_closed', '=', false)->first();
+
+        if (! ($year instanceof YearAcademic)) {
+            return response()->json(['data' => null]);
+        }
 
         return new YearItemResource($year);
     }
