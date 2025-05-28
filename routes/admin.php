@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Admin\AdminYearController;
 use App\Http\Controllers\Api\Admin\AdminOptionController;
 use App\Http\Controllers\Api\Admin\AdminDepartmentController;
 
@@ -14,4 +15,8 @@ Route::prefix('admin')
         Route::apiResource('option', AdminOptionController::class)
             ->parameter('option', 'id')
             ->except(['destroy', 'store']);
+
+        Route::get('/year', [AdminYearController::class, 'index']);
+        Route::get('/year/{id}', [AdminYearController::class, 'show']);
+        Route::post('/year/{id}/closed', [AdminYearController::class, 'closed']);
     });

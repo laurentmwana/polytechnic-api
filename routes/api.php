@@ -9,3 +9,6 @@ Route::get('/department/{id}', [DepartmentController::class, 'show']);
 
 Route::get('/options', [OptionController::class, 'index']);
 Route::get('/option/{id}', [OptionController::class, 'show']);
+
+
+Route::get('/year/current', YearCurrentCOntroller::class);
