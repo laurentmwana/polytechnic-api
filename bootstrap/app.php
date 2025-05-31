@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Middleware\ForceJsonResponse;
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\CheckRoleAdmin;
+use App\Http\Middleware\CheckRoleStudent;
+use App\Http\Middleware\ForceJsonResponse;
+use App\Http\Middleware\CheckRoleDisableAccount;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
@@ -23,6 +26,12 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->append([
             ForceJsonResponse::class
+        ]);
+
+        $middleware->alias([
+            'admin' => CheckRoleAdmin::class,
+            'student' => CheckRoleStudent::class,
+            'student-state' => CheckRoleDisableAccount::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -39,18 +39,9 @@ class NewPasswordController extends Controller
             }
         );
 
-        if ($status == Password::PasswordReset) {
-            return response()->json([
-                'data' => [
-                    'email' => __($status)
-                ]
-            ]);
-        }
-
         return response()->json([
-            'data' => [
-                'email' => [__($status)]
-            ]
+            'is_update' => $status == Password::PasswordReset,
+            'message' => trans($status)
         ]);
     }
 }

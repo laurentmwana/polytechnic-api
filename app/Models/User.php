@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'name',
         'email',
         'password',
+        'roles'
     ];
 
     /**
@@ -70,6 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'roles' => 'array',
         ];
     }
 }

@@ -19,7 +19,7 @@ class UserLoginResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'isEmailVerified' => $this->hasVerifiedEmail(),
-            'role' => $this->role,
+            'roles' => $this->roles,
             'accessToken' => $this->token,
         ];
     }

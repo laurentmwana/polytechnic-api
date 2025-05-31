@@ -9,25 +9,29 @@ use App\Http\Controllers\Api\Other\YearCurrentController;
 use App\Http\Controllers\Api\Profile\ProfileEditController;
 use App\Http\Controllers\Api\Profile\ProfilePasswordController;
 
-Route::get('/departments', [DepartmentController::class, 'index']);
-Route::get('/department/{id}', [DepartmentController::class, 'show']);
 
-Route::get('/options', [OptionController::class, 'index']);
-Route::get('/option/{id}', [OptionController::class, 'show']);
+ROute::name('^')->group(function () {
 
-Route::get('/year/current', YearCurrentController::class);
+    Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
+    Route::get('/department/{id}', [DepartmentController::class, 'show'])->name('department.show');
 
-Route::get('/levels', [LevelController::class, 'index']);
-Route::get('/level/{id}', [LevelController::class, 'show']);
+    Route::get('/options', [OptionController::class, 'index'])->name('option.index');
+    Route::get('/option/{id}', [OptionController::class, 'show'])->name('option.show');
+
+    Route::get('/year/current', YearCurrentController::class)->name('year.current');
+
+    Route::get('/levels', [LevelController::class, 'index'])->name('level.index');
+    Route::get('/level/{id}', [LevelController::class, 'show'])->name('level.show');
 
 
-Route::middleware('auth')->group(function () {
+    Route::middleware('auth')->group(function () {
 
-    Route::get('/me', MeController::class);
+        Route::get('/me', MeController::class)->name('me');
 
-    Route::post('/profile/edit', ProfileEditController::class)
-        ->name('profile.edit');
+        Route::post('/profile/edit', ProfileEditController::class)
+            ->name('profile.edit');
 
-    Route::post('/profile/change-password', ProfilePasswordController::class)
-        ->name('profile.password');
+        Route::post('/profile/change-password', ProfilePasswordController::class)
+            ->name('profile.password');
+    });
 });

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Level;
 use App\Models\Option;
 use App\Models\Department;
+use App\Enums\RoleUserEnum;
 use App\Models\YearAcademic;
 use Illuminate\Database\Seeder;
 
@@ -22,6 +23,20 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'roles' => [RoleUserEnum::ADMIN->value],
+        ]);
+
+        User::factory()->create([
+            'name' => 'Student',
+            'email' => 'student@gmail.com',
+            'roles' => [RoleUserEnum::STUDENT->value, RoleUserEnum::DISABLE->value],
+        ]);
+
+        User::factory()->create([
+            'name' => 'Lock',
+            'email' => 'lock@gmail.com',
+            'roles' => [RoleUserEnum::STUDENT],
+            'email_verified_at' => null
         ]);
 
         for ($index = 2024; $index < 2025; $index++) {
