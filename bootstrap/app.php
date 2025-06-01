@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             __DIR__ . '/../routes/admin.php',
             __DIR__ . '/../routes/api.php',
             __DIR__ . '/../routes/auth.php',
+            __DIR__ . '/../routes/other.php',
         ],
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
@@ -50,6 +51,6 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, Request $request) {
-            return response()->json(['message' => "Vous n'êtes pas connecté"], 401);
+            return response()->json(['message' => "unauthorized"], 401);
         });
     })->create();

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\Admin\AdminYearController;
 use App\Http\Controllers\Api\Admin\AdminOptionController;
 use App\Http\Controllers\Api\Admin\AdminDepartmentController;
@@ -24,7 +25,8 @@ Route::prefix('admin')
         Route::post('/year/{id}/closed', [AdminYearController::class, 'closed'])
             ->name('year.closed');
 
-
-        Route::apiResource('option', AdminOptionController::class)
-            ->parameter('option', 'id');
+        Route::apiResource('user', AdminUserController::class)
+            ->parameter('user', 'id');
+                Route::post('/user/{id}/lock', [AdminUserController::class, 'lock'])
+            ->name('user.lock');
     });

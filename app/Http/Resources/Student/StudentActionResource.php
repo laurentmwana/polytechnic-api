@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Student;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserMeResource extends JsonResource
+class StudentActionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +17,10 @@ class UserMeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
-            'isEmailVerified' => $this->hasVerifiedEmail(),
-            'roles' => $this->roles
+            'firstname' => $this->firstname,
+            'registration_token' => $this->registration_token,
+            'phone' => $this->phone,
+            'gender' => $this->gender,
         ];
     }
 }

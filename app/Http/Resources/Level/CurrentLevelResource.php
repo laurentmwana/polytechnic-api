@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Level;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\Year\YearItemResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserMeResource extends JsonResource
+class CurrentLevelResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +17,8 @@ class UserMeResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'isEmailVerified' => $this->hasVerifiedEmail(),
-            'roles' => $this->roles
+            'level' => new LevelActionResource($this->level),
+            'year' => new YearItemResource($this->yearAcademic),
         ];
     }
 }

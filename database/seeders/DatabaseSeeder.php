@@ -6,8 +6,10 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Level;
 use App\Models\Option;
+use App\Models\Student;
 use App\Models\Department;
 use App\Enums\RoleUserEnum;
+use App\Models\ActualLevel;
 use App\Models\YearAcademic;
 use Illuminate\Database\Seeder;
 
@@ -32,12 +34,15 @@ class DatabaseSeeder extends Seeder
             'roles' => [RoleUserEnum::STUDENT->value, RoleUserEnum::DISABLE->value],
         ]);
 
-        User::factory()->create([
-            'name' => 'Lock',
-            'email' => 'lock@gmail.com',
-            'roles' => [RoleUserEnum::STUDENT],
-            'email_verified_at' => null
-        ]);
+        User::factory(100)->create([
+            'roles' => [RoleUserEnum::STUDENT->value],
+        ])->each(function (User $user) {
+            Student::factory()->create(['user_id' => $user]);
+        });
+
+        Student::factory(10)->create();
+
+
 
         for ($index = 2024; $index < 2025; $index++) {
             $start = $index;
@@ -58,6 +63,25 @@ class DatabaseSeeder extends Seeder
             Level::factory(10)->create([
                 'year_academic_id' => $year->id,
             ]);
+        }
+
+
+        foreach (Student::all() as $student) {
+
+            $actual = ActualLevel::create([
+                'student_id' => $student->id,
+                'year_academic_id' => YearAcademic::all()->random()->id,
+                'level_id' => Level::all()->random()->id,
+            ]);
+
+            for ($index = 0; $index < 3; $index++) {
+                $actual->update([
+                    'year_academic_id' => YearAcademic::all()->random()->id,
+                    'level_id' => Level::all()->random()->id,
+                ]);
+            }
+
+            // course followed
         }
     }
 }

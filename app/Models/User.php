@@ -60,6 +60,11 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return [];
     }
 
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+
 
     /**
      * Get the attributes that should be cast.
