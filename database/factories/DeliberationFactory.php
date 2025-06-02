@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Level;
+use App\Models\YearAcademic;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,10 @@ class DeliberationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'level_id' => Level::all()->random()->id,
+            'year_academic_id' => YearAcademic::all()->random()->id,
+            'start_at' => now()->addDays(5),
+            'criteria' => fake()->paragraph()
         ];
     }
 }

@@ -5,11 +5,14 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Level;
+use App\Models\Course;
 use App\Models\Option;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\Department;
 use App\Enums\RoleUserEnum;
 use App\Models\ActualLevel;
+use App\Models\Deliberation;
 use App\Models\YearAcademic;
 use Illuminate\Database\Seeder;
 
@@ -21,6 +24,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
+
+        $this->call(DefaultSeeder::class);
 
         User::factory()->create([
             'name' => 'Test User',
@@ -42,22 +47,21 @@ class DatabaseSeeder extends Seeder
 
         Student::factory(10)->create();
 
-        for ($index = 2024; $index < 2025; $index++) {
-            $start = $index;
-            $end = $index + 1;
-
-            YearAcademic::create([
-                'name' => "{$start}-{$end}",
-                'start' => $start,
-                'end' => $end,
-            ]);
-        }
-
         Department::factory(2)->create();
+
+        Teacher::factory(40)->create();
 
         Option::factory(10)->create();
 
         Level::factory(20)->create();
+
+        foreach (Level::all() as $level) {
+            for ($index = 0; $index < 15; $index++) {
+                Course::factory()->create([
+                    'level_id' => $level->id,
+                ]);
+            }
+        }
 
         foreach (Student::all() as $student) {
 
@@ -76,5 +80,9 @@ class DatabaseSeeder extends Seeder
 
             // course followed
         }
+
+        Deliberation::factory(20)->create();
+
+        $this->call(JurySeeder::class);
     }
 }

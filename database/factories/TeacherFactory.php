@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\GenderEnum;
+use App\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,11 @@ class TeacherFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name,
+            'firstname' => fake()->firstname,
+            'gender' => fake()->randomElement(GenderEnum::cases())->value,
+            'department_id' => Department::all()->random()->id,
+            'phone' => fake()->phoneNumber(),
         ];
     }
 }

@@ -9,4 +9,16 @@ class Jury extends Model
 {
     /** @use HasFactory<\Database\Factories\JuryFactory> */
     use HasFactory;
+
+    protected $fillable = ['teacher_id', 'year_academic_id'];
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
+
+    public function deliberation()
+    {
+        return $this->belongsTo(Deliberation::class);
+    }
 }

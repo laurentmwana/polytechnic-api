@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignId('deliberation_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->boolean('is_president')->default(false);
             $table->timestamps();
         });
     }
