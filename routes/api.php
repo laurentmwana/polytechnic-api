@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MeController;
+use App\Http\Controllers\Api\Other\ContactController;
 use App\Http\Controllers\Api\Other\LevelController;
 use App\Http\Controllers\Api\Other\OptionController;
 use App\Http\Controllers\Api\Other\DepartmentController;
@@ -24,6 +25,8 @@ ROute::name('^')->group(function () {
 
     Route::get('/levels', [LevelController::class, 'index'])->name('level.index');
     Route::get('/level/{id}', [LevelController::class, 'show'])->name('level.show');
+
+    Route::post('/contact', ContactController::class)->name('contact.send');
 
 
     Route::middleware('auth')->group(function () {
