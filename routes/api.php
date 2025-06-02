@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\MeController;
 use App\Http\Controllers\Api\Other\LevelController;
 use App\Http\Controllers\Api\Other\OptionController;
 use App\Http\Controllers\Api\Other\DepartmentController;
-use App\Http\Controllers\Api\Other\YearCurrentController;
+use App\Http\Controllers\Api\Other\YearController;
 use App\Http\Controllers\Api\Profile\ProfileEditController;
 use App\Http\Controllers\Api\Profile\ProfilePasswordController;
 
@@ -18,7 +18,9 @@ ROute::name('^')->group(function () {
     Route::get('/options', [OptionController::class, 'index'])->name('option.index');
     Route::get('/option/{id}', [OptionController::class, 'show'])->name('option.show');
 
-    Route::get('/year/current', YearCurrentController::class)->name('year.current');
+    Route::get('/current/year', [YearController::class, 'current'])->name('year.current');
+    Route::get('/years', [YearController::class, 'index'])->name('year.index');
+    Route::get('/year/{id}', [YearController::class, 'show'])->name('year.show');
 
     Route::get('/levels', [LevelController::class, 'index'])->name('level.index');
     Route::get('/level/{id}', [LevelController::class, 'show'])->name('level.show');

@@ -17,10 +17,10 @@ class ProfilePasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        $request->user()->update([
+        $state = $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);
 
-        return response()->json(['message' => "votre mot de passe a été modifié"]);
+        return response()->json(['state' => $state]);
     }
 }

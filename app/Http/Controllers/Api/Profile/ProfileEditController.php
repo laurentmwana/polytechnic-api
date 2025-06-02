@@ -19,7 +19,7 @@ class ProfileEditController extends Controller
         $request->user()->save();
 
         return response()->json([
-            'message' => "vos informations ont été editées",
+            'state' => true,
         ]);
     }
 }

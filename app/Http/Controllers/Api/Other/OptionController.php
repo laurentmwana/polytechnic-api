@@ -6,14 +6,18 @@ use App\Models\Option;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Option\OptionItemResource;
 use App\Http\Resources\Option\OptionCollectionResource;
+use Illuminate\Http\Request;
 
 class OptionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $options = Option::with(['department'])
-            ->orderByDesc('updated_at')
-            ->paginate();
+        $limit = $request->query->getInt('limit');
+
+        $builder = Option::with(['department', 'levels'])
+            ->orderByDesc('updated_at');
+
+        $options = $limit > 0 ? $builder->limit($limit)->get() : $builder->paginate();
 
         return OptionCollectionResource::collection($options);
     }

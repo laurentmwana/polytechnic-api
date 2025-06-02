@@ -20,6 +20,7 @@ class LevelActionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'alias' => $this->alias,
+            'programme' => $this->programme,
             'option' => new OptionActionResource($this->option),
             'year' => new YearItemResource($this->yearAcademic),
         ];

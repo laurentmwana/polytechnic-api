@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Repositories\OptionRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,5 +15,10 @@ class Option extends Model
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function levels()
+    {
+        return $this->hasMany(Level::class);
     }
 }

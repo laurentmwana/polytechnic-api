@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\LevelProgrammeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +19,10 @@ return new class extends Migration
             $table->foreignId('option_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->enum('programme', array_map(
+                fn(LevelProgrammeEnum $enum) => $enum->value,
+                LevelProgrammeEnum::cases(),
+            ));
             $table->timestamps();
         });
     }

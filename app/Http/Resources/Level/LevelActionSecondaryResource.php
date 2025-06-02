@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Year;
+namespace App\Http\Resources\Level;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class YearItemResource extends JsonResource
+class LevelActionSecondaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,9 @@ class YearItemResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'start' => $this->start,
-            'end' => $this->end,
-            'is_closed' => $this->is_closed,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'alias' => $this->alias,
+            'programme' => $this->programme,
+
         ];
     }
 }

@@ -19,12 +19,6 @@ return new class extends Migration
             $table->boolean('is_closed')->default(false);
             $table->timestamps();
         });
-
-        Schema::table('levels', function (Blueprint $table) {
-            $table->foreignId('year_academic_id')
-                ->constrained()
-                ->cascadeOnDelete();
-        });
     }
 
     /**

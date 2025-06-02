@@ -11,7 +11,7 @@ class LevelController extends Controller
 {
     public function index()
     {
-        $levels = Level::with(['option', 'yearAcademic'])
+        $levels = Level::with(['option'])
             ->orderByDesc('updated_at')
             ->paginate();
 

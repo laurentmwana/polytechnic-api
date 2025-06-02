@@ -42,8 +42,6 @@ class DatabaseSeeder extends Seeder
 
         Student::factory(10)->create();
 
-
-
         for ($index = 2024; $index < 2025; $index++) {
             $start = $index;
             $end = $index + 1;
@@ -59,12 +57,7 @@ class DatabaseSeeder extends Seeder
 
         Option::factory(10)->create();
 
-        foreach (YearAcademic::all() as $year) {
-            Level::factory(10)->create([
-                'year_academic_id' => $year->id,
-            ]);
-        }
-
+        Level::factory(20)->create();
 
         foreach (Student::all() as $student) {
 
