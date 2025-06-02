@@ -4,33 +4,56 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Student;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Year\YearItemResource;
-use App\Http\Resources\Year\YearCollectionResource;
+use App\Http\Requests\StudentRequest;
+use App\Http\Resources\Student\StudentItemResource;
+use App\Http\Resources\Student\StudentActionResource;
+use App\Http\Resources\Student\StudentCollectionResource;
 
-class AdminYearController extends Controller
+class AdminStudentController extends Controller
 {
 
     public function index()
     {
-        $years = Student::orderByDesc('updated_at')
+        $students = Student::with(['actualLevel'])->orderByDesc('updated_at')
             ->paginate();
 
-        return YearCollectionResource::collection($years);
+        return StudentCollectionResource::collection($students);
+    }
+
+    public function store(StudentRequest $request)
+    {
+        $student = Student::create($request->validated());
+
+        return new StudentActionResource($student);
     }
 
     public function show(string $id)
     {
-        $year = Student::findOrFail($id);
+        $student = Student::findOrFail($id);
 
-        return new YearItemResource($year);
+        return new StudentItemResource($student);
     }
 
-    public function closed(string $id)
+
+    public function update(StudentRequest $request, string $id)
     {
-        $year = Student::findOrFail($id);
+        $student = Student::findOrFail($id);
 
-        $newYear = $this->getNewYear($year);
+        $state = $student->update($request->validated());
 
-        return new YearItemResource($newYear);
+        return response()->json([
+            'state' => $state
+        ]);
+    }
+
+    public function destroy(string $id)
+    {
+        $student = Student::findOrFail($id);
+
+        $state = $student->delete();
+
+        return response()->json([
+            'state' => $state
+        ]);
     }
 }

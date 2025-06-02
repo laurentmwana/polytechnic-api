@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Admin\AdminJuryController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\Admin\AdminYearController;
 use App\Http\Controllers\Api\Admin\AdminCourseController;
 use App\Http\Controllers\Api\Admin\AdminOptionController;
+use App\Http\Controllers\Api\Admin\AdminStudentController;
 use App\Http\Controllers\Api\Admin\AdminTeacherController;
 use App\Http\Controllers\Api\Admin\AdminDepartmentController;
 use App\Http\Controllers\Api\Admin\AdminDeliberationController;
@@ -41,4 +43,10 @@ Route::prefix('admin')
 
         Route::apiResource('teacher', AdminTeacherController::class)
             ->parameter('teacher', 'id');
+            
+        Route::apiResource('jury', AdminJuryController::class)
+            ->parameter('jury', 'id');
+            
+        Route::apiResource('student', AdminStudentController::class)
+            ->parameter('student', 'id');
     });
