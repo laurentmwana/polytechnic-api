@@ -3,8 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\Admin\AdminYearController;
+use App\Http\Controllers\Api\Admin\AdminCourseController;
 use App\Http\Controllers\Api\Admin\AdminOptionController;
+use App\Http\Controllers\Api\Admin\AdminTeacherController;
 use App\Http\Controllers\Api\Admin\AdminDepartmentController;
+use App\Http\Controllers\Api\Admin\AdminDeliberationController;
 
 
 Route::prefix('admin')
@@ -27,6 +30,15 @@ Route::prefix('admin')
 
         Route::apiResource('user', AdminUserController::class)
             ->parameter('user', 'id');
-                Route::post('/user/{id}/lock', [AdminUserController::class, 'lock'])
+        Route::post('/user/{id}/lock', [AdminUserController::class, 'lock'])
             ->name('user.lock');
+
+        Route::apiResource('deliberation', AdminDeliberationController::class)
+            ->parameter('deliberation', 'id');
+
+        Route::apiResource('course', AdminCourseController::class)
+            ->parameter('course', 'id');
+
+        Route::apiResource('teacher', AdminTeacherController::class)
+            ->parameter('teacher', 'id');
     });

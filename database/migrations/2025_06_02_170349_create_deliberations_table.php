@@ -1,10 +1,11 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Enums\SemesterEnum;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
+return new class  extends Migration
 {
     /**
      * Run the migrations.
@@ -20,9 +21,13 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             $table->dateTime('start_at');
+            $table->enum('semester', array_map(
+                fn(SemesterEnum $enum) => $enum->value,
+                SemesterEnum::cases(),
+            ));
 
             $table->longText('criteria');
-            
+
             $table->timestamps();
         });
     }
