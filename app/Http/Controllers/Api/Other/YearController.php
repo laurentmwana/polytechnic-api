@@ -11,8 +11,7 @@ class YearController extends Controller
 {
     public function index()
     {
-        $years = YearAcademic::orderByDesc('updated_at')
-            ->orderByDesc('is_closed')
+        $years = YearAcademic::orderBy('is_closed')
             ->paginate();
 
         return YearCollectionResource::collection($years);

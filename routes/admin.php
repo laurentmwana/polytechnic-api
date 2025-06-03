@@ -24,11 +24,11 @@ Route::prefix('admin')
         Route::apiResource('option', AdminOptionController::class)
             ->parameter('option', 'id');
 
-        Route::get('/year', [AdminYearController::class, 'index'])
+        Route::get('/year-academic', [AdminYearController::class, 'index'])
             ->name('year.index');
-        Route::get('/year/{id}', [AdminYearController::class, 'show'])
+        Route::get('/year-academic/{id}', [AdminYearController::class, 'show'])
             ->name('year.show');
-        Route::post('/year/{id}/closed', [AdminYearController::class, 'closed'])
+        Route::post('/year-academic/{id}/closed', [AdminYearController::class, 'closed'])
             ->name('year.closed');
 
         Route::apiResource('user', AdminUserController::class)
@@ -52,7 +52,7 @@ Route::prefix('admin')
             ->parameter('student', 'id');
     });
 
-    Route::name('#')
+Route::name('#')
     ->middleware(['auth', "admin"])
     ->group(function () {
         Route::get('/dashboard', DashboardController::class)->name('dashboard');
