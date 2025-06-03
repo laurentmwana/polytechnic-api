@@ -13,8 +13,12 @@ use App\Models\Department;
 use App\Enums\RoleUserEnum;
 use App\Models\ActualLevel;
 use App\Models\Deliberation;
+use App\Models\FeesAcademic;
 use App\Models\YearAcademic;
+use App\Models\FeesLaboratory;
 use Illuminate\Database\Seeder;
+use Database\Seeders\JurySeeder;
+use Database\Seeders\DefaultSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -55,13 +59,9 @@ class DatabaseSeeder extends Seeder
 
         Level::factory(20)->create();
 
-        foreach (Level::all() as $level) {
-            for ($index = 0; $index < 15; $index++) {
-                Course::factory()->create([
-                    'level_id' => $level->id,
-                ]);
-            }
-        }
+        $year = YearAcademic::where('is_closed', '=', false)->first();
+
+
 
         foreach (Student::all() as $student) {
 
@@ -77,9 +77,31 @@ class DatabaseSeeder extends Seeder
                     'level_id' => Level::all()->random()->id,
                 ]);
             }
-
-            // course followed
         }
+
+        foreach (Level::all() as $level) {
+            for ($index = 0; $index < 15; $index++) {
+                Course::factory()->create([
+                    'level_id' => $level->id,
+                ]);
+            }
+
+            FeesLaboratory::create([
+                'level_id' => $level->id,
+                'year_academic_id' => $year->id,
+                'amount' => random_int(10, 50)
+            ]);
+
+            FeesAcademic::create([
+                'level_id' => $level->id,
+                'year_academic_id' => $year->id,
+                'amount' => random_int(10, 50)
+            ]);
+        }
+
+
+
+
 
         Deliberation::factory(20)->create();
 
