@@ -61,8 +61,6 @@ class DatabaseSeeder extends Seeder
 
         $year = YearAcademic::where('is_closed', '=', false)->first();
 
-
-
         foreach (Student::all() as $student) {
 
             $actual = ActualLevel::create([
