@@ -37,27 +37,13 @@ class DatabaseSeeder extends Seeder
             'roles' => [RoleUserEnum::ADMIN->value],
         ]);
 
-        User::factory()->create([
-            'name' => 'Student',
-            'email' => 'student@gmail.com',
-            'roles' => [RoleUserEnum::STUDENT->value, RoleUserEnum::DISABLE->value],
-        ]);
-
-        User::factory(100)->create([
+        User::factory(20)->create([
             'roles' => [RoleUserEnum::STUDENT->value],
         ])->each(function (User $user) {
             Student::factory()->create(['user_id' => $user]);
         });
 
-        Student::factory(10)->create();
-
-        Department::factory(2)->create();
-
         Teacher::factory(40)->create();
-
-        Option::factory(10)->create();
-
-        Level::factory(20)->create();
 
         $year = YearAcademic::where('is_closed', '=', false)->first();
 
@@ -96,10 +82,6 @@ class DatabaseSeeder extends Seeder
                 'amount' => random_int(10, 50)
             ]);
         }
-
-
-
-
 
         Deliberation::factory(20)->create();
 

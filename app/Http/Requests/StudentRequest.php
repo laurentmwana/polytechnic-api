@@ -39,6 +39,10 @@ class StudentRequest extends BaseFormRequest
                 'required',
                 'exists:levels,id'
             ],
+            'year_academic_id' => [
+                'required',
+                'exists:year_academics,id'
+            ],
         ];
     }
 }

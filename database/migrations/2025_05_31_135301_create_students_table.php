@@ -16,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('firstname');
-            $table->string('phone')->unique();
-            $table->string('registration_token')->unique();
+            $table->string('phone');
+            $table->string('registration_token');
             $table->enum('gender', array_map(
                 fn(GenderEnum $enum) => $enum->value,
                 GenderEnum::cases(),
@@ -27,7 +27,6 @@ return new class extends Migration
                 ->unique()
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->date('birth');
             $table->timestamps();
         });
     }

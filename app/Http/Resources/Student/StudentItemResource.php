@@ -3,7 +3,9 @@
 namespace App\Http\Resources\Student;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\User\UserSimpleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Level\LevelActionResource;
 use App\Http\Resources\Level\CurrentLevelResource;
 
 class StudentItemResource extends JsonResource
@@ -22,8 +24,9 @@ class StudentItemResource extends JsonResource
             'phone' => $this->phone,
             'registration_token' => $this->registration_token,
             'gender' => $this->gender,
-            'actual_level' => (new CurrentLevelResource($this->actualLevel)),
+            'actual_level' => new CurrentLevelResource($this->actualLevel),
             'historic_levels' => CurrentLevelResource::collection($this->historicLevels),
+            'user' => new UserSimpleResource($this->user),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

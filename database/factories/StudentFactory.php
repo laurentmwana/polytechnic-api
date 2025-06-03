@@ -24,7 +24,6 @@ class StudentFactory extends Factory
             'gender' => fake()->randomElement(GenderEnum::cases())->value,
             'registration_token' => Str::random(10),
             'phone' => fake()->phoneNumber(),
-            'birth' => fake()->date(),
         ];
     }
 }
