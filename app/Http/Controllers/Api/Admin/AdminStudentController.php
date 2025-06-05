@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Models\Student;
 use App\Models\ActualLevel;
 use Illuminate\Support\Str;
+use App\Imports\StudentsImport;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StudentRequest;
+use App\Http\Requests\StudentExcelRequest;
 use App\Http\Resources\Student\StudentItemResource;
 use App\Http\Resources\Student\StudentActionResource;
 use App\Http\Resources\Student\StudentCollectionResource;
@@ -39,8 +42,17 @@ class AdminStudentController extends Controller
         return response()->json([
             'state' => $student !== null
         ]);
+    }
 
-        return new StudentActionResource($student);
+    public function excell(StudentExcelRequest $request)
+    {
+        $import = new StudentsImport();
+
+        Excel::import($import, $request->validated('file'));
+
+        return response()->json([
+            'state' => true
+        ]);
     }
 
     public function show(string $id)

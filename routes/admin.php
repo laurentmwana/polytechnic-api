@@ -12,7 +12,6 @@ use App\Http\Controllers\Api\Admin\AdminTeacherController;
 use App\Http\Controllers\Api\Admin\AdminDepartmentController;
 use App\Http\Controllers\Api\Admin\AdminDeliberationController;
 
-
 Route::prefix('admin')
     ->name('#')
     ->middleware(['auth', "admin"])
@@ -50,6 +49,9 @@ Route::prefix('admin')
 
         Route::apiResource('student', AdminStudentController::class)
             ->parameter('student', 'id');
+
+        Route::post('student/create-with-excel', [AdminStudentController::class, 'excell'])
+            ->name('student.excell');
     });
 
 Route::name('#')
