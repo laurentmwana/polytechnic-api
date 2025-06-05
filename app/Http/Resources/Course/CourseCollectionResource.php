@@ -22,6 +22,7 @@ class CourseCollectionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
+            'credits' => $this->credits,
             'teacher' => new TeacherActionResource($this->teacher),
             'level' => new LevelActionSecondaryResource($this->level),
             'created_at' => $this->created_at,

@@ -15,10 +15,12 @@ Route::prefix('/data-select')
         Route::get('/year-academic', [SelectDataController::class, 'years'])
             ->name('years');
 
-
         Route::get('/departments', [SelectDataController::class, 'departments'])
             ->name('departments');
-            
+
         Route::get('/teachers', [SelectDataController::class, 'teachers'])
             ->name('teachers');
+
+        Route::get('/options', [SelectDataController::class, 'options'])
+            ->name('options');
     });

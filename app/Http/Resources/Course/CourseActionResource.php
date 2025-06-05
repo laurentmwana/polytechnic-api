@@ -21,6 +21,7 @@ class CourseActionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
+            'credits' => $this->credits,
             'teacher' => new TeacherActionResource($this->teacher),
             'created_at' => $this->created_at,
         ];

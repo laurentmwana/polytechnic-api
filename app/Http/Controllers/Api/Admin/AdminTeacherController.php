@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TeacherRequest;
 use App\Http\Resources\Deliberation\DeliberationItemResource;
 use App\Http\Resources\Deliberation\DeliberationCollectionResource;
+use App\Http\Resources\Teacher\TeacherCollectionResource;
+use App\Http\Resources\Teacher\TeacherItemResource;
 
 class AdminTeacherController extends Controller
 {
@@ -16,7 +18,7 @@ class AdminTeacherController extends Controller
             ->orderByDesc('updated_at')
             ->paginate();
 
-        return DeliberationCollectionResource::collection($teachers);
+        return TeacherCollectionResource::collection($teachers);
     }
 
 
@@ -33,7 +35,7 @@ class AdminTeacherController extends Controller
     {
         $teacher = Teacher::findOrFail($id);
 
-        return new DeliberationItemResource($teacher);
+        return new TeacherItemResource($teacher);
     }
 
     public function update(TeacherRequest $request, string $id)

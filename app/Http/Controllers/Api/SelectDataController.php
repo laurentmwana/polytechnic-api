@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Level;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\Option;
 use App\Models\Department;
 use App\Models\YearAcademic;
 use App\Http\Controllers\Controller;
@@ -49,6 +50,13 @@ class SelectDataController extends Controller
     {
         return response()->json(
             Teacher::all(['id', 'name', 'firstname', 'gender'])
+        );
+    }
+
+      public function options()
+    {
+        return response()->json(
+            Option::with('department')->get(['id', 'name', 'firstname', 'gender'])
         );
     }
 }

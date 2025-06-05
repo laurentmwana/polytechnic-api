@@ -27,16 +27,17 @@ class CourseRequest extends BaseFormRequest
             ],
             'code' => [
                 'required',
+                'alpha_num',
                 'between:2,20'
             ],
             'credits' => [
                 'required',
-                'number',
-                'between:2,20'
+                'numeric',
+                'between:1,60'
             ],
             'teacher_id' => [
                 'required',
-                'exists:tearchers,id'
+                'exists:teachers,id'
             ],
             'level_id' => [
                 'required',
