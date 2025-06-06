@@ -4,6 +4,7 @@ namespace App\Http\Resources\Department;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Option\OptionActionResource;
 
 class DepartmentItemResource extends JsonResource
 {
@@ -15,9 +16,10 @@ class DepartmentItemResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'alias' => $this->alias,
-            'options' => $this->options,
+            'options' => OptionActionResource::collection($this->options),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

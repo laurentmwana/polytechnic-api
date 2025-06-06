@@ -11,7 +11,9 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::query()->findPaginated();
+        $departments = Department::with(['options'])
+            ->orderByDesc('updated_at')
+            ->paginate();
 
         return DepartmentCollectionResource::collection($departments);
     }
@@ -19,7 +21,7 @@ class DepartmentController extends Controller
 
     public function show(string $id)
     {
-        $department = Department::query()->findOneOrThrow($id);
+        $department = Department::findOrFail($id);
 
         return new DepartmentItemResource($department);
     }

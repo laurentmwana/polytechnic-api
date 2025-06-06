@@ -5,10 +5,20 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Level;
+use App\Models\Course;
 use App\Models\Option;
+use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\Department;
+use App\Enums\RoleUserEnum;
+use App\Models\ActualLevel;
+use App\Models\Deliberation;
+use App\Models\FeesAcademic;
 use App\Models\YearAcademic;
+use App\Models\FeesLaboratory;
 use Illuminate\Database\Seeder;
+use Database\Seeders\JurySeeder;
+use Database\Seeders\DefaultSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,30 +29,62 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        $this->call(DefaultSeeder::class);
+
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'roles' => [RoleUserEnum::ADMIN->value],
         ]);
 
-        for ($index = 2024; $index < 2025; $index++) {
-            $start = $index;
-            $end = $index + 1;
+        User::factory(20)->create([
+            'roles' => [RoleUserEnum::STUDENT->value],
+        ])->each(function (User $user) {
+            Student::factory()->create(['user_id' => $user]);
+        });
 
-            YearAcademic::create([
-                'name' => "{$start}-{$end}",
-                'start' => $start,
-                'end' => $end,
+        Teacher::factory(40)->create();
+
+        $year = YearAcademic::where('is_closed', '=', false)->first();
+
+        foreach (Student::all() as $student) {
+
+            $actual = ActualLevel::create([
+                'student_id' => $student->id,
+                'year_academic_id' => YearAcademic::all()->random()->id,
+                'level_id' => Level::all()->random()->id,
             ]);
+
+            for ($index = 0; $index < 3; $index++) {
+                $actual->update([
+                    'year_academic_id' => YearAcademic::all()->random()->id,
+                    'level_id' => Level::all()->random()->id,
+                ]);
+            }
         }
 
-        Department::factory(2)->create();
+        foreach (Level::all() as $level) {
+            for ($index = 0; $index < 15; $index++) {
+                Course::factory()->create([
+                    'level_id' => $level->id,
+                ]);
+            }
 
-        Option::factory(10)->create();
-
-        foreach (YearAcademic::all() as $year) {
-            Level::factory(10)->create([
+            FeesLaboratory::create([
+                'level_id' => $level->id,
                 'year_academic_id' => $year->id,
+                'amount' => random_int(10, 50)
+            ]);
+
+            FeesAcademic::create([
+                'level_id' => $level->id,
+                'year_academic_id' => $year->id,
+                'amount' => random_int(10, 50)
             ]);
         }
+
+        Deliberation::factory(20)->create();
+
+        $this->call(JurySeeder::class);
     }
 }

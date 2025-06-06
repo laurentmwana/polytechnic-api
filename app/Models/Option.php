@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Repositories\OptionRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,8 +12,13 @@ class Option extends Model
 
     protected $fillable = ['name', 'alias', 'department_id'];
 
-    public function newEloquentBuilder($query): OptionRepository
+    public function department()
     {
-        return new OptionRepository($query);
+        return $this->belongsTo(Department::class);
+    }
+
+    public function levels()
+    {
+        return $this->hasMany(Level::class);
     }
 }

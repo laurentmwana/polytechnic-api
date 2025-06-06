@@ -13,8 +13,8 @@ class Department extends Model
 
     protected $fillable = ['name', 'alias'];
 
-    public function newEloquentBuilder($query): DepartmentRepository
+    public function options()
     {
-        return new DepartmentRepository($query);
+        return $this->hasMany(Option::class);
     }
 }
