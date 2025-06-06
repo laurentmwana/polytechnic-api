@@ -38,7 +38,7 @@ class SelectDataController extends Controller
         );
     }
 
-      public function departments()
+    public function departments()
     {
         return response()->json(
             Department::all(['id', 'name', 'alias'])
@@ -46,17 +46,17 @@ class SelectDataController extends Controller
     }
 
 
-      public function teachers()
+    public function teachers()
     {
         return response()->json(
             Teacher::all(['id', 'name', 'firstname', 'gender'])
         );
     }
 
-      public function options()
+    public function options()
     {
         return response()->json(
-            Option::with('department')->get(['id', 'name', 'firstname', 'gender'])
+            Option::with('department')->get()
         );
     }
 }

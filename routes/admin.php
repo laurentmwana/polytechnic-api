@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Admin\AdminStudentController;
 use App\Http\Controllers\Api\Admin\AdminTeacherController;
 use App\Http\Controllers\Api\Admin\AdminDepartmentController;
 use App\Http\Controllers\Api\Admin\AdminDeliberationController;
+use App\Http\Controllers\Api\Admin\AdminLevelController;
 
 Route::prefix('admin')
     ->name('#')
@@ -43,6 +44,10 @@ Route::prefix('admin')
 
         Route::apiResource('teacher', AdminTeacherController::class)
             ->parameter('teacher', 'id');
+
+        Route::apiResource('level', AdminLevelController::class)
+            ->parameter('level', 'id');
+
 
         Route::apiResource('jury', AdminJuryController::class)
             ->parameter('jury', 'id');

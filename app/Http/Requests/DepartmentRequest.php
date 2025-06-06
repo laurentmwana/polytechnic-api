@@ -2,6 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Department;
+use App\Http\Requests\BaseFormRequest;
+use Illuminate\Validation\Rules\Unique;
+
 
 class DepartmentRequest extends BaseFormRequest
 {
@@ -20,14 +24,18 @@ class DepartmentRequest extends BaseFormRequest
      */
     public function rules(): array
     {
+        $id = $this->input('id');
+
         return [
             'name' => [
                 'required',
-                'between:2,255'
+                'between:2,255',
+                (new Unique(Department::class))->ignore($id),
             ],
             'alias' => [
                 'required',
-                'between:2,255'
+                'between:2,255',
+                (new Unique(Department::class))->ignore($id),
             ],
         ];
     }

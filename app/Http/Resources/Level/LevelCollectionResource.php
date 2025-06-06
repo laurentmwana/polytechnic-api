@@ -22,7 +22,7 @@ class LevelCollectionResource extends JsonResource
             'alias' => $this->alias,
             'programme' => $this->programme,
             'option' => new OptionActionResource($this->option),
-            'created_at' => 'created_at',
+            'created_at' => $this->created_at,
         ];
     }
 }

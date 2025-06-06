@@ -6,7 +6,6 @@ use App\Models\Option;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OptionRequest;
 use App\Http\Resources\Option\OptionItemResource;
-use App\Http\Resources\Option\OptionActionResource;
 use App\Http\Resources\Option\OptionCollectionResource;
 
 class AdminOptionController extends Controller
@@ -24,7 +23,9 @@ class AdminOptionController extends Controller
     {
         $option = Option::create($request->validated());
 
-        return new OptionActionResource($option);
+        return response()->json([
+            'state' => $option instanceof Option
+        ]);
     }
 
     public function show(string $id)
