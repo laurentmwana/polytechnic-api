@@ -33,6 +33,7 @@ Route::prefix('admin')
 
         Route::apiResource('user', AdminUserController::class)
             ->parameter('user', 'id');
+            
         Route::post('/user/{id}/lock', [AdminUserController::class, 'lock'])
             ->name('user.lock');
 
@@ -47,7 +48,6 @@ Route::prefix('admin')
 
         Route::apiResource('level', AdminLevelController::class)
             ->parameter('level', 'id');
-
 
         Route::apiResource('jury', AdminJuryController::class)
             ->parameter('jury', 'id');

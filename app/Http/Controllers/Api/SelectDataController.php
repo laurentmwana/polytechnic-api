@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Level;
+use App\Models\Option;
 use App\Models\Student;
 use App\Models\Teacher;
-use App\Models\Option;
 use App\Models\Department;
+use App\Models\Deliberation;
 use App\Models\YearAcademic;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Deliberation\DeliberationActionResource;
 
 class SelectDataController extends Controller
 {
@@ -58,5 +60,12 @@ class SelectDataController extends Controller
         return response()->json(
             Option::with('department')->get()
         );
+    }
+
+    public function delibes()
+    {
+        $delibes =  Deliberation::with(['yearAcademic', 'level'])->get();
+
+        return DeliberationActionResource::collection($delibes);
     }
 }

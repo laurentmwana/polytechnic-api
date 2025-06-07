@@ -10,7 +10,7 @@ class Jury extends Model
     /** @use HasFactory<\Database\Factories\JuryFactory> */
     use HasFactory;
 
-    protected $fillable = ['teacher_id', 'year_academic_id'];
+    protected $fillable = ['teacher_id', 'deliberation_id'];
 
     public function teacher()
     {

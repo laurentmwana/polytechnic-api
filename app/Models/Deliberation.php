@@ -10,7 +10,7 @@ class Deliberation extends Model
     /** @use HasFactory<\Database\Factories\DeliberationFactory> */
     use HasFactory;
 
-    protected $fillable = ['level_id', 'year_academic_id', 'criteria', 'start_at'];
+    protected $fillable = ['level_id', 'year_academic_id', 'criteria', 'start_at', 'semester'];
 
     public function juries()
     {
@@ -19,10 +19,10 @@ class Deliberation extends Model
 
     public function level()
     {
-        return $this->belongsTo(YearAcademic::class);
+        return $this->belongsTo(Level::class);
     }
 
-    public function yearAcaddemic()
+    public function yearAcademic()
     {
         return $this->belongsTo(YearAcademic::class);
     }

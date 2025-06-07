@@ -23,4 +23,7 @@ Route::prefix('/data-select')
 
         Route::get('/options', [SelectDataController::class, 'options'])
             ->name('options');
+
+        Route::get('/deliberations', [SelectDataController::class, 'delibes'])
+            ->name('delibe');
     });

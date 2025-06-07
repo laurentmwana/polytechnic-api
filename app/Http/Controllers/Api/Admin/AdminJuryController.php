@@ -24,7 +24,9 @@ class AdminJuryController extends Controller
     {
         $jury = Jury::create($request->validated());
 
-        return new JuryActionResource($jury);
+        return response()->json([
+            'state' => $jury !== null
+        ]);
     }
 
     public function show(string $id)
