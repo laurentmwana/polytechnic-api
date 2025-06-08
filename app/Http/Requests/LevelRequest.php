@@ -29,14 +29,12 @@ class LevelRequest extends BaseFormRequest
                 'required',
                 'between:2,255'
             ],
+            'programme' => [
+                'required',
+            ],
             'option_id' => [
                 'required',
                 'exists:options,id'
-            ],
-
-            'year_academic_id' => [
-                'required',
-                'exists:year_academics,id'
             ],
         ];
     }

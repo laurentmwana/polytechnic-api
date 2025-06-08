@@ -21,23 +21,14 @@ class JuryRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'between:2,255'
-            ],
-            'alias' => [
-                'required',
-                'between:2,255'
-            ],
-
-            'deliberaation_id' => [
+            'deliberation_id' => [
                 'required',
                 'exists:deliberations,id'
             ],
 
             'teacher_id' => [
                 'required',
-                'exists:tearchers,id'
+                'exists:teachers,id'
             ],
         ];
     }

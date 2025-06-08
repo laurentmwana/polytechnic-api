@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Enums\LevelProgrammeEnum;
 use App\Models\Level;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LevelRequest;
@@ -14,7 +15,7 @@ class AdminLevelController extends Controller
 
     public function index()
     {
-        $levels = Level::with(['option', 'yearAcademic'])->orderByDesc('updated_at')
+        $levels = Level::with(['option'])->orderByDesc('updated_at')
             ->paginate();
 
         return LevelCollectionResource::collection($levels);
@@ -24,7 +25,9 @@ class AdminLevelController extends Controller
     {
         $level = Level::create($request->validated());
 
-        return new LevelActionResource($level);
+        return response()->json([
+            'state' => $level instanceof Level
+        ]);
     }
 
     public function show(string $id)

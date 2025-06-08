@@ -18,7 +18,7 @@ class FeesCollectionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'amount' => $this->paid_at,
+            'amount' => $this->amount,
             'level' => new LevelActionSecondaryResource($this->level),
             'year' => new YearItemResource($this->yearAcademic),
             'created_at' => $this->created_at,
