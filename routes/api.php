@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Other\ContactController;
 use App\Http\Controllers\Api\Other\LevelController;
 use App\Http\Controllers\Api\Other\OptionController;
 use App\Http\Controllers\Api\Other\DepartmentController;
+use App\Http\Controllers\Api\Other\DeliberationController;
 use App\Http\Controllers\Api\Other\YearController;
 use App\Http\Controllers\Api\Profile\ProfileEditController;
 use App\Http\Controllers\Api\Profile\ProfilePasswordController;
@@ -25,6 +26,13 @@ ROute::name('^')->group(function () {
 
     Route::get('/levels', [LevelController::class, 'index'])->name('level.index');
     Route::get('/level/{id}', [LevelController::class, 'show'])->name('level.show');
+
+
+    Route::get('/deliberations', [DeliberationController::class, 'index'])
+        ->name('delibe.index');
+    Route::get('/deliberation/{id}', [DeliberationController::class, 'show'])
+        ->name('delibe.show');
+
 
     Route::post('/contact', ContactController::class)->name('contact.send');
 

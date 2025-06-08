@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Deliberation;
 
+use App\Http\Resources\Jury\JuryOnlyTeacherResource;
 use Illuminate\Http\Request;
 use App\Http\Resources\Year\YearItemResource;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,6 +24,7 @@ class DeliberationItemResource extends JsonResource
             'semester' => $this->semester,
             'year' => new YearItemResource($this->yearAcademic),
             'level' => new LevelActionResource($this->level),
+            'juries' => JuryOnlyTeacherResource::collection($this->juries),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
