@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MeController;
 use App\Http\Controllers\Api\Other\YearController;
 use App\Http\Controllers\Api\Other\LevelController;
+use App\Http\Controllers\Api\Other\CourseController;
 use App\Http\Controllers\Api\Other\OptionController;
 use App\Http\Controllers\Api\Other\ContactController;
 use App\Http\Controllers\Api\Other\TeacherController;
@@ -13,7 +14,6 @@ use App\Http\Controllers\Api\Other\FeesAcademicController;
 use App\Http\Controllers\Api\Profile\ProfileEditController;
 use App\Http\Controllers\Api\Other\FeesLaboratoryController;
 use App\Http\Controllers\Api\Profile\ProfilePasswordController;
-
 
 Route::name('^')->group(function () {
 
@@ -46,8 +46,11 @@ Route::name('^')->group(function () {
     Route::get('/fees-laboratories', [FeesLaboratoryController::class, 'index'])->name('fees-labo.index');
     Route::get('/fees-laboratory/{id}', [FeesLaboratoryController::class, 'show'])->name('fees-labo.show');
 
-    Route::post('/contact', ContactController::class)->name('contact.send');
+    Route::get('/courses', [CourseController::class, 'index'])->name('course.index');
+    Route::get('/course/{id}', [CourseController::class, 'show'])->name('course.show');
 
+
+    Route::post('/contact', ContactController::class)->name('contact.send');
 
     Route::middleware('auth')->group(function () {
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Repositories\DepartmentRepository;
+use App\Http\Resources\Course\CourseActionResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Department extends Model
