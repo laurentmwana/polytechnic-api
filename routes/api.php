@@ -2,17 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MeController;
-use App\Http\Controllers\Api\Other\ContactController;
+use App\Http\Controllers\Api\Other\YearController;
 use App\Http\Controllers\Api\Other\LevelController;
 use App\Http\Controllers\Api\Other\OptionController;
+use App\Http\Controllers\Api\Other\ContactController;
+use App\Http\Controllers\Api\Other\TeacherController;
 use App\Http\Controllers\Api\Other\DepartmentController;
 use App\Http\Controllers\Api\Other\DeliberationController;
-use App\Http\Controllers\Api\Other\YearController;
 use App\Http\Controllers\Api\Profile\ProfileEditController;
 use App\Http\Controllers\Api\Profile\ProfilePasswordController;
 
 
-ROute::name('^')->group(function () {
+Route::name('^')->group(function () {
 
     Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
     Route::get('/department/{id}', [DepartmentController::class, 'show'])->name('department.show');
@@ -33,6 +34,9 @@ ROute::name('^')->group(function () {
     Route::get('/deliberation/{id}', [DeliberationController::class, 'show'])
         ->name('delibe.show');
 
+
+    Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
+    Route::get('/teacher/{id}', [TeacherController::class, 'show'])->name('teacher.show');
 
     Route::post('/contact', ContactController::class)->name('contact.send');
 
