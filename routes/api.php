@@ -9,7 +9,9 @@ use App\Http\Controllers\Api\Other\ContactController;
 use App\Http\Controllers\Api\Other\TeacherController;
 use App\Http\Controllers\Api\Other\DepartmentController;
 use App\Http\Controllers\Api\Other\DeliberationController;
+use App\Http\Controllers\Api\Other\FeesAcademicController;
 use App\Http\Controllers\Api\Profile\ProfileEditController;
+use App\Http\Controllers\Api\Other\FeesLaboratoryController;
 use App\Http\Controllers\Api\Profile\ProfilePasswordController;
 
 
@@ -37,6 +39,12 @@ Route::name('^')->group(function () {
 
     Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
     Route::get('/teacher/{id}', [TeacherController::class, 'show'])->name('teacher.show');
+
+    Route::get('/fees-academics', [FeesAcademicController::class, 'index'])->name('fees-aca.index');
+    Route::get('/fees-academic/{id}', [FeesAcademicController::class, 'show'])->name('fees-aca.show');
+
+    Route::get('/fees-laboratories', [FeesLaboratoryController::class, 'index'])->name('fees-labo.index');
+    Route::get('/fees-laboratory/{id}', [FeesLaboratoryController::class, 'show'])->name('fees-labo.show');
 
     Route::post('/contact', ContactController::class)->name('contact.send');
 
