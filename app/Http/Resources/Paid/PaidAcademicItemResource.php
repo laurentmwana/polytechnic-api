@@ -25,6 +25,8 @@ class PaidAcademicItemResource extends JsonResource
             'student' => new StudentActionResource($this->student),
             'academic' => new FeesActionResource($this->feesAcademic),
             'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at,
+
         ];
     }
 }

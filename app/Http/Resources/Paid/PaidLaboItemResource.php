@@ -23,7 +23,7 @@ class PaidLaboItemResource extends JsonResource
             'student' => new StudentActionResource($this->student),
             'laboratory' => new FeesActionResource($this->feesLaboratory),
             'updated_at' => $this->updated_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at,
         ];
     }
 }
