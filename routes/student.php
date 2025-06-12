@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Student\FolderController;
 use App\Http\Controllers\Api\Student\PaidAcademicController;
 use App\Http\Controllers\Api\Student\CourseFollowedController;
 use App\Http\Controllers\Api\Student\PaidLaboratoryController;
@@ -25,4 +26,7 @@ Route::prefix('/student')
 
         Route::post('/course-followed/{id}', [CourseFollowedController::class, 'follow'])
             ->name('followed.create');
+
+        Route::get('/folder', FolderController::class)
+            ->name('folder.index');
     });
