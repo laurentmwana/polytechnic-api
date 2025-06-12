@@ -34,4 +34,19 @@ class Student extends Model
     {
         return $this->hasMany(HistoricLevel::class);
     }
+
+    public function paidLaboratories()
+    {
+        return $this->hasMany(PaidLaboratory::class);
+    }
+
+    public function paidAcademics()
+    {
+        return $this->hasMany(PaidAcademic::class);
+    }
+
+    public function courseFolloweds()
+    {
+        return $this->hasMany(CourseFollowed::class);
+    }
 }

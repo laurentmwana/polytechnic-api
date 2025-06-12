@@ -48,7 +48,7 @@ class AdminStudentController extends Controller
     {
         $import = new StudentsImport();
 
-        Excel::import($import, $request->validated('file'));
+        Excel::import($import, $request->validated('excel'));
 
         return response()->json([
             'state' => true

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Teacher;
+use Illuminate\Validation\Rules\Unique;
 
 class TeacherRequest extends BaseFormRequest
 {
@@ -20,6 +22,8 @@ class TeacherRequest extends BaseFormRequest
      */
     public function rules(): array
     {
+        $id = $this->input('id');
+
         return [
             'name' => [
                 'required',
@@ -34,6 +38,7 @@ class TeacherRequest extends BaseFormRequest
             ],
             'phone' => [
                 'required',
+                (new Unique(Teacher::class))->ignore($id)
             ],
             'department_id' => [
                 'required',

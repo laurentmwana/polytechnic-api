@@ -21,11 +21,6 @@ class CourseItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $isFollow = FollowStudent::isFollow(
-            $this->id,
-            $request->user()
-        );
-
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -33,7 +28,6 @@ class CourseItemResource extends JsonResource
             'credits' => $this->credits,
             'teacher' => new TeacherActionResource($this->teacher),
             'level' => new LevelActionSecondaryResource($this->level),
-            'is_follow' => $isFollow,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
