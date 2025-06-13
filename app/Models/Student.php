@@ -49,4 +49,9 @@ class Student extends Model
     {
         return $this->hasMany(CourseFollowed::class);
     }
+
+    public function results()
+    {
+        return $this->hasMany(Result::class);
+    }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Admin\AdminStudentController;
 use App\Http\Controllers\Api\Admin\AdminTeacherController;
 use App\Http\Controllers\Api\Admin\AdminDepartmentController;
 use App\Http\Controllers\Api\Admin\AdminDeliberationController;
+use App\Http\Controllers\Api\Admin\AdminResultController;
 use App\Http\Controllers\Api\Admin\AdminLevelController;
 
 Route::prefix('admin')
@@ -33,6 +34,9 @@ Route::prefix('admin')
 
         Route::apiResource('user', AdminUserController::class)
             ->parameter('user', 'id');
+
+            Route::apiResource('result', AdminResultController::class)
+            ->parameter('result', 'id');
             
         Route::post('/user/{id}/lock', [AdminUserController::class, 'lock'])
             ->name('user.lock');

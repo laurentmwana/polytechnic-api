@@ -6,5 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Result extends Model
 {
-    //
+    protected $fillable = ['deliberation_id', 'student_id', 'is_eligible', 'file'];
+
+    public function deliberation()
+    {
+        return $this->belongsTo(Deliberation::class);
+    }
+
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
 }
