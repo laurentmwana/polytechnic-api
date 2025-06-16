@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Result;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Level;
@@ -86,5 +87,21 @@ class DatabaseSeeder extends Seeder
         Deliberation::factory(20)->create();
 
         $this->call(JurySeeder::class);
+
+
+        foreach (Student::all() as $student) {
+
+            $deliberations = Deliberation::where('level_id', '=', $student->actualLevel->level_id)
+                ->get();
+
+            foreach ($deliberations as $deliberation) {
+                Result::create([
+                    'deliberation_id' => $deliberation->id,
+                    'student_id' => $student->id,
+                    'is_eligible' => true,
+                    'file'=> 'demo.pdf'
+                ]);
+            }
+        }
     }
 }

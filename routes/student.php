@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Student\FolderController;
 use App\Http\Controllers\Api\Student\PaidAcademicController;
 use App\Http\Controllers\Api\Student\CourseFollowedController;
 use App\Http\Controllers\Api\Student\PaidLaboratoryController;
+use App\Http\Controllers\Api\Student\ResultController;
 
 Route::prefix('/student')
     ->name('°')
@@ -29,4 +30,10 @@ Route::prefix('/student')
 
         Route::get('/folder', FolderController::class)
             ->name('folder.index');
+
+        Route::get('/result', [ResultController::class, 'index'])
+            ->name('result.index');
+            
+        Route::get('/result/{id}/download', [PaidLaboratoryController::class, 'download'])
+            ->name('result.download');
     });
