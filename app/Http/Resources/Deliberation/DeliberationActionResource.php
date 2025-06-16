@@ -19,6 +19,7 @@ class DeliberationActionResource extends JsonResource
         return [
             'id' => $this->id,
             'start_at' => $this->start_at,
+            'semester' => $this->semester,
             'year' => new YearItemResource($this->yearAcademic),
             'level' => new LevelActionResource($this->level),
             'created_at' => $this->created_at,

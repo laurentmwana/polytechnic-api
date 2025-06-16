@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Imports\StudentResultsImport;
+use App\Jobs\PublishedResultStudentJob;
 use App\Models\Result;
+use App\Models\Deliberation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResultRequest;
 use App\Services\Upload\FileUploadAction;
 use App\Http\Resources\Result\ResultItemResource;
 use App\Http\Resources\Result\ResultCollectionResource;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class AdminResultController extends Controller
 {
@@ -25,18 +30,33 @@ class AdminResultController extends Controller
 
     public function store(ResultRequest $request)
     {
-        $filePdf = $this->upload->handle(
-            self::PATH_PDF,
-            $request->validated('file'),
+        $file = $request->file('file');
+
+        $deliberation  = Deliberation::with(['level', 'yearAcademic'])
+            ->findOrFail($request->validated('deliberation_id'));
+
+        $tempDir = storage_path('app/temp');
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        $user = $request->user();
+
+        $filename = 'import_' . time() . '.xlsx';
+        $filePath = $tempDir . '/' . $filename;
+
+    
+        $file->move($tempDir, $filename);
+
+        PublishedResultStudentJob::dispatch(
+            $filePath,
+            $deliberation,
+            $user
         );
 
-        $result = Result::create([
-            ...$request->validated(),
-            'file' => $filePdf
-        ]);
 
         return response()->json([
-            'state' => $result !== null
+            'state' => true
         ]);
     }
 

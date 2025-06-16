@@ -29,19 +29,15 @@ class ResultRequest extends BaseFormRequest
         $id = $this->input('id');
 
         return [
-            'student_id' => [
-                'required',
-                'exists:students,id',
-                new StudentHasAccountRule($id),
-            ],
-
             'deliberation_id' => [
                 'required',
-                'exists:deliberation_id,id',
+                'exists:deliberations,id',
             ],
-
-            'file' => ['required', 'file', 'mimes:pdf'],
-            'is_eligible' => ['required', 'boolean']
+            'file' => [
+                'required', 
+                'file', 
+                'mimes:xlsx,xls'
+            ],
         ];
     }
 }
