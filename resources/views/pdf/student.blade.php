@@ -15,8 +15,7 @@
         </div>
     </div>
 
-    <!-- Section Informations Étudiant -->
-    <div style="margin-bottom: 30px;">
+       <div style="margin-bottom: 30px;">
         <h2 style="background-color: black; color: white; padding: 10px; margin: 0 0 15px 0; font-size: 16px; font-weight: bold;">
             INFORMATIONS ÉTUDIANT
         </h2>
@@ -39,7 +38,19 @@
                 <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Matricule :</td>
                 <td style="padding: 10px; border: 1px solid black;">{{ $infos['matricule'] ?? '' }}</td>
                 <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Éligible :</td>
-                <td style="padding: 10px; border: 1px solid black;">{{ $infos['eligible'] ?? '' }}</td>
+                <td style="padding: 10px; border: 1px solid black;">
+                    {{ isset($is_eligible) ? ($is_eligible ? 'Oui' : 'Non') : ($infos['eligible'] ?? '-') }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Paiement Labo :</td>
+                <td style="padding: 10px; border: 1px solid black;">
+                    {{ isset($is_paid_labo) ? ($is_paid_labo ? 'Oui' : 'Non') : '-' }}
+                </td>
+                <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Paiement Académique :</td>
+                <td style="padding: 10px; border: 1px solid black;">
+                    {{ isset($is_paid_academic) ? ($is_paid_academic ? 'Oui' : 'Non') : '-' }}
+                </td>
             </tr>
         </table>
     </div>

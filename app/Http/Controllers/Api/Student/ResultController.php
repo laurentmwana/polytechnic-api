@@ -40,11 +40,19 @@ class ResultController extends Controller
 
         if (!$student) {
             return response()->json([
-                'data' => []
+                'message' => "ce compte n'est pas associé à un étudiant (:"
             ],404);
         }
 
         $result = $student->results()->findOrFail($id);
+
+        if ($result->is_paid_labo && !$result->is_paid_academic) {
+            throw new \Exception("Vous n'êtes pas en ordre vec le frais académique");
+        }
+
+        elseif (!$result->is_paid_labo && $result->is_paid_academic) {
+            throw new \Exception("Vous n'êtes pas en ordre vec le frais de labo");
+        }    
 
         return $this->downloadFile($result);
 

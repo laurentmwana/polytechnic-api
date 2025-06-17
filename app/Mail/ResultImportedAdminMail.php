@@ -30,6 +30,8 @@ class ResultImportedAdminMail extends Mailable implements ShouldQueue
     {
         return new Envelope(
             subject: 'Confirmation d\'importation des résultats académiques',
+            cc: [$this->user->email],
+            to: [$this->user->email],
         );
     }
 
