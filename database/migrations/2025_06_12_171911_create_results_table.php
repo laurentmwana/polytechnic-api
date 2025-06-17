@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('file');
             $table->boolean('is_eligible')->defaul(false);
+            $table->boolean('is_paid_labo')->default(false);
+            $table->boolean('is_paid_academic')->default(false);
             $table->foreignId('student_id')
                 ->constrained()
                 ->cascadeOnDelete();

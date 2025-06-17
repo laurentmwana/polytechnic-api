@@ -21,6 +21,7 @@ class StudentSheetImport implements ToCollection
         $summary = [];
         $matricule = null;
         $eligible = null;
+        $paid = null;
 
         $parsingUes = false;
         $parsingSummary = false;
@@ -30,20 +31,21 @@ class StudentSheetImport implements ToCollection
 
             // Ligne des infos
             if ($firstCell === 'NOMS') {
-                // Récupère la ligne suivante pour les infos
                 $studentData = [
                     'noms'      => $rows[$i + 1][0] ?? null,
                     'mention'   => $rows[$i + 1][1] ?? null,
                     'matricule' => $rows[$i + 1][2] ?? null,
                     'eligible'  => $rows[$i + 1][3] ?? null,
+                    'paid'      => $rows[$i + 1][4] ?? null,
                 ];
                 $matricule = $studentData['matricule'];
                 $eligible = strtoupper(trim($studentData['eligible'])) === 'OUI';
+                $paid = $studentData['paid'] ?? null;
                 continue;
             }
 
             // Début des UEs
-            if ($firstCell === 'CODE UE') {
+            if ($firstCell === 'Labo / Académique' || $firstCell === 'CODE UE') {
                 $parsingUes = true;
                 continue;
             }
@@ -92,24 +94,37 @@ class StudentSheetImport implements ToCollection
             return;
         }
 
+        // Gestion des paiements labo/académique
+        $isPaidLabo = false;
+        $isPaidAcademic = false;
+        if ($paid && str_contains($paid, '/')) {
+            [$paidLabo, $paidAcademic] = array_map('trim', explode('/', $paid));
+            $isPaidLabo = strtoupper($paidLabo) === 'OUI';
+            $isPaidAcademic = strtoupper($paidAcademic) === 'OUI';
+        }
+
         // Générer PDF
         $pdf = Pdf::loadView('pdf.student', [
-            'infos'        => $studentData,
-            'ues'          => $ues,
-            'summary'      => $summary,
-            'deliberation' => $this->deliberation
+            'infos'            => $studentData,
+            'ues'              => $ues,
+            'summary'          => $summary,
+            'deliberation'     => $this->deliberation,
+            'is_eligible'      => $eligible,
+            'is_paid_labo'     => $isPaidLabo,
+            'is_paid_academic' => $isPaidAcademic,
         ]);
 
         $fileId = $matricule . '-' . Str::random(20);
-
         $filename = 'results/' . $fileId . '.pdf';
         Storage::disk('public')->put($filename, $pdf->output());
 
         Result::create([
-            'file'            => $filename,
-            'student_id'      => $student->id,
-            'deliberation_id' => $this->deliberation->id,
-            'is_eligible'     => $eligible ?? false,
+            'file'              => $filename,
+            'student_id'        => $student->id,
+            'deliberation_id'   => $this->deliberation->id,
+            'is_eligible'       => $eligible ?? false,
+            'is_paid_labo'      => $isPaidLabo,
+            'is_paid_academic'  => $isPaidAcademic,
         ]);
 
         \Log::info("Résultat enregistré pour $matricule");

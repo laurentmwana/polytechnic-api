@@ -3,12 +3,8 @@
 namespace App\Providers;
 
 use App\Models\ActualLevel;
-use App\Models\FeesAcademic;
-use App\Models\FeesLaboratory;
 use App\Observers\ActualLevelObserver;
-use App\Observers\FeesAcademicObserver;
 use Illuminate\Support\ServiceProvider;
-use App\Observers\FeesLaboratoryObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,7 +13,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
     }
 
     /**
@@ -26,7 +21,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         ActualLevel::observe(new ActualLevelObserver());
-        FeesAcademic::observe(new FeesAcademicObserver());
-        FeesLaboratory::observe(new FeesLaboratoryObserver());
     }
 }

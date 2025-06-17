@@ -7,16 +7,12 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Level;
 use App\Models\Course;
-use App\Models\Option;
 use App\Models\Student;
 use App\Models\Teacher;
-use App\Models\Department;
 use App\Enums\RoleUserEnum;
 use App\Models\ActualLevel;
 use App\Models\Deliberation;
-use App\Models\FeesAcademic;
 use App\Models\YearAcademic;
-use App\Models\FeesLaboratory;
 use Illuminate\Database\Seeder;
 use Database\Seeders\JurySeeder;
 use Database\Seeders\DefaultSeeder;
@@ -70,18 +66,6 @@ class DatabaseSeeder extends Seeder
                     'level_id' => $level->id,
                 ]);
             }
-
-            FeesLaboratory::create([
-                'level_id' => $level->id,
-                'year_academic_id' => $year->id,
-                'amount' => random_int(10, 50)
-            ]);
-
-            FeesAcademic::create([
-                'level_id' => $level->id,
-                'year_academic_id' => $year->id,
-                'amount' => random_int(10, 50)
-            ]);
         }
 
         Deliberation::factory(20)->create();
