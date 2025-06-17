@@ -2,8 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\FeesAcademic;
-use App\Models\FeesLaboratory;
+use App\Models\Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -44,18 +43,12 @@ class FeeStatistics
             return [];
         }
 
-        $academicFees = FeesAcademic::selectRaw('year_academic_id, SUM(amount) as total')
-            ->groupBy('year_academic_id')
+        return Result::select('deliberations.year_academic_id')
+            ->selectRaw('SUM(CASE WHEN is_paid_academic THEN 1 ELSE 0 END) as total_academic')
+            ->selectRaw('SUM(CASE WHEN is_paid_labo THEN 1 ELSE 0 END) as total_laboratory')
+            ->join('deliberations', 'results.deliberation_id', '=', 'deliberations.id')
+            ->groupBy('deliberations.year_academic_id')
             ->get();
-
-        $laboratoryFees = FeesLaboratory::selectRaw('year_academic_id, SUM(amount) as total')
-            ->groupBy('year_academic_id')
-            ->get();
-
-        return [
-            'academic' => $academicFees,
-            'laboratory' => $laboratoryFees
-        ];
     }
 
     public function getLevelStatistics()
@@ -64,25 +57,18 @@ class FeeStatistics
             return [];
         }
 
-        $feesAcademics = FeesAcademic::select('level_id', DB::raw('SUM(amount) as total'))
-            ->groupBy('level_id');
-
-        $feesLaboratories = FeesLaboratory::select('level_id', DB::raw('SUM(amount) as total'))
-            ->groupBy('level_id');
-
-        $unionSql = $feesAcademics->toSql() . ' UNION ALL ' . $feesLaboratories->toSql();
-
-        $data = DB::table(DB::raw("({$unionSql}) as combined"))
-            ->mergeBindings($feesAcademics->getQuery())
-            ->mergeBindings($feesLaboratories->getQuery())
-            ->select('level_id', DB::raw('SUM(total) as total'))
-            ->groupBy('level_id')
-            ->get();
-
-        return $data->map(fn($item) => [
-            'level_id' => $item->level_id,
-            'total' => $item->total,
-        ]);
+        return Result::select('actual_levels.level_id')
+            ->selectRaw('SUM(CASE WHEN is_paid_academic THEN 1 ELSE 0 END + CASE WHEN is_paid_labo THEN 1 ELSE 0 END) as total')
+            ->join('students', 'results.student_id', '=', 'students.id')
+            ->join('actual_levels', function ($join) {
+                $join->on('students.id', '=', 'actual_levels.student_id');
+            })
+            ->groupBy('actual_levels.level_id')
+            ->get()
+            ->map(fn($item) => [
+                'level_id' => $item->level_id,
+                'total' => $item->total,
+            ]);
     }
 
     private function getYearlyData($yearAcademicId)
@@ -91,19 +77,19 @@ class FeeStatistics
             return collect();
         }
 
-        $academicFees = FeesAcademic::select('level_id', DB::raw('SUM(amount) as total_amount'))
-            ->where('year_academic_id', $yearAcademicId)
-            ->groupBy('level_id')
+        return Result::select('actual_levels.level_id')
+            ->selectRaw('SUM(CASE WHEN is_paid_academic THEN 1 ELSE 0 END + CASE WHEN is_paid_labo THEN 1 ELSE 0 END) as total_amount')
+            ->join('students', 'results.student_id', '=', 'students.id')
+            ->join('actual_levels', function ($join) use ($yearAcademicId) {
+                $join->on('students.id', '=', 'actual_levels.student_id')
+                     ->where('actual_levels.year_academic_id', '=', $yearAcademicId);
+            })
+            ->join('deliberations', 'results.deliberation_id', '=', 'deliberations.id')
+            ->where('deliberations.year_academic_id', $yearAcademicId)
+            ->groupBy('actual_levels.level_id')
             ->get()
-            ->keyBy('level_id');
-
-        $laboratoryFees = FeesLaboratory::select('level_id', DB::raw('SUM(amount) as total_amount'))
-            ->where('year_academic_id', $yearAcademicId)
-            ->groupBy('level_id')
-            ->get()
-            ->keyBy('level_id');
-
-        return $academicFees->merge($laboratoryFees)->groupBy('level_id')->map(fn($items) => $items->sum('total_amount'));
+            ->keyBy('level_id')
+            ->map(fn($item) => $item->total_amount);
     }
 
     private function formatChartData($currentYearData, $previousYearData)
