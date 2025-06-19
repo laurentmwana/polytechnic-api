@@ -17,8 +17,7 @@ class DefaultSeeder extends Seeder
 {
 
     private const DEPARTMENTS = [
-        ['name' => 'Génie Electrique'],
-        ['name' => 'Informatique'],
+        ['name' => 'Génie électrique'],
     ];
 
     private const PROGRAMMES = [

@@ -12,7 +12,7 @@ use App\Models\YearAcademic;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Deliberation\DeliberationActionResource;
 
-class SelectDataController extends Controller
+class DataController extends Controller
 {
     public function students()
     {

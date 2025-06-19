@@ -1,29 +1,29 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\SelectDataController;
+use App\Http\Controllers\Api\DataController;
 
 Route::prefix('/data-select')
     ->name('&')
     ->group(function () {
-        Route::get('/students', [SelectDataController::class, 'students'])
+        Route::get('/students', [DataController::class, 'students'])
             ->name('student');
 
-        Route::get('/levels', [SelectDataController::class, 'levels'])
+        Route::get('/levels', [DataController::class, 'levels'])
             ->name('level');
 
-        Route::get('/year-academic', [SelectDataController::class, 'years'])
+        Route::get('/year-academic', [DataController::class, 'years'])
             ->name('years');
 
-        Route::get('/departments', [SelectDataController::class, 'departments'])
+        Route::get('/departments', [DataController::class, 'departments'])
             ->name('departments');
 
-        Route::get('/teachers', [SelectDataController::class, 'teachers'])
+        Route::get('/teachers', [DataController::class, 'teachers'])
             ->name('teachers');
 
-        Route::get('/options', [SelectDataController::class, 'options'])
+        Route::get('/options', [DataController::class, 'options'])
             ->name('options');
 
-        Route::get('/deliberations', [SelectDataController::class, 'delibes'])
+        Route::get('/deliberations', [DataController::class, 'delibes'])
             ->name('delibe');
     });

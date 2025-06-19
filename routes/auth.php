@@ -28,6 +28,15 @@ Route::middleware('auth')->group(function () {
         ->name('verify.opt');
 
     Route::post('confirm-password', ConfirmablePasswordController::class);
+
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::post('verify-email/{id}/{hash}', VerifyEmailController::class)
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+
+    Route::post('email/verification-notification', EmailVerificationNotificationController::class)
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
 });

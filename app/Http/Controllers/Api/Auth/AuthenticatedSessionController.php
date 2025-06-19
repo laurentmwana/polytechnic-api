@@ -13,7 +13,6 @@ use App\Enums\RoleUserEnum;
 
 class AuthenticatedSessionController extends Controller
 {
-
     public function login(LoginRequest $request): UserLoginResource|JsonResponse
     {
         if (! $token = Auth::attempt($request->validated())) {
@@ -22,20 +21,14 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json([
-                'message' => 'Votre compte est désactivé, vous devez confirmer votre adresse e-mail pour continuer'
-            ], 401);
-        }
-
         $rolesToCheck = [RoleUserEnum::STUDENT->value, RoleUserEnum::DISABLE->value];
 
         if (empty(array_diff($rolesToCheck, $user->roles))) {
             return response()->json([
+                'state' => 'lock',
                 'message' => 'Votre compte a été bloqué par l\'administrateur'
             ], 401);
         }
-
 
         return $this->getResponseUser($user, $token);
     }

@@ -41,9 +41,6 @@ Route::name('^')->group(function () {
     Route::get('/courses', [CourseController::class, 'index'])->name('course.index');
     Route::get('/course/{id}', [CourseController::class, 'show'])->name('course.show');
 
-
-    Route::post('/contact', ContactController::class)->name('contact.send');
-
     Route::middleware('auth')->group(function () {
 
         Route::get('/me', MeController::class)->name('me');
