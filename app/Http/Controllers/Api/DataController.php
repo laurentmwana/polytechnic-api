@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Level;
-use App\Models\Option;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Department;
@@ -52,13 +51,6 @@ class DataController extends Controller
     {
         return response()->json(
             Teacher::all(['id', 'name', 'firstname', 'gender'])
-        );
-    }
-
-    public function options()
-    {
-        return response()->json(
-            Option::with('department')->get()
         );
     }
 
