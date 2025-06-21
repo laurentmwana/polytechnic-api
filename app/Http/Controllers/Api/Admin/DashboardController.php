@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Models\Course;
 use App\Models\Level;
-
 use App\Models\Teacher;
 use App\Models\Department;
 use App\Http\Controllers\Controller;
@@ -16,6 +16,7 @@ class DashboardController extends Controller
     {
         return response()->json([
             'departments' => Department::count('id'),
+            'courses' => Course::count('id'),
             'levels' => Level::count('id'),
             'teachers' => Teacher::count('id'),
             'statistics' => [

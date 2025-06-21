@@ -42,7 +42,7 @@ Route::name('^')->group(function () {
     Route::get('/notification/{id}', [NotificationController::class, 'show']);
     Route::put('/mark-as-read/notification', [NotificationController::class, 'markAsRead']);
     Route::delete('/notification/{id}/destroy', [NotificationController::class, 'destroy']);
-    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notification', [NotificationController::class, 'index']);
     Route::get('/last-notification', [NotificationController::class, 'lastNotification']);
 
     Route::middleware('auth')->group(function () {

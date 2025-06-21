@@ -27,7 +27,7 @@ class DataController extends Controller
     public function levels()
     {
         return response()->json(
-            Level::with('option')->get()
+            Level::with('department')->get()
         );
     }
 

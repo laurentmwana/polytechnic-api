@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Imports\StudentResultsImport;
-use App\Jobs\PublishedResultStudentJob;
+use App\Jobs\StudentResultsPublisherJob;
 use App\Models\Result;
 use App\Models\Deliberation;
 use Illuminate\Http\Request;
@@ -12,12 +11,11 @@ use App\Http\Requests\ResultRequest;
 use App\Services\Upload\FileUploadAction;
 use App\Http\Resources\Result\ResultItemResource;
 use App\Http\Resources\Result\ResultCollectionResource;
-use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class AdminResultController extends Controller
 {
-    private const PATH_PDF = "results";
+    private const PATH_PDF = 'results';
+    private const TEMP_DIR = 'app/temp';
 
     public function __construct(private FileUploadAction $upload) {}
 
@@ -30,34 +28,18 @@ class AdminResultController extends Controller
 
     public function store(ResultRequest $request)
     {
-        $file = $request->file('file');
-
-        $deliberation  = Deliberation::with(['level', 'yearAcademic'])
+        $deliberation = Deliberation::with(['level', 'yearAcademic'])
             ->findOrFail($request->validated('deliberation_id'));
 
-        $tempDir = storage_path('app/temp');
-        if (!is_dir($tempDir)) {
-            mkdir($tempDir, 0755, true);
-        }
+        $filePath = $this->storeTempFile($request->file('file'));
 
-        $user = $request->user();
-
-        $filename = 'import_' . time() . '.xlsx';
-        $filePath = $tempDir . '/' . $filename;
-
-    
-        $file->move($tempDir, $filename);
-
-        PublishedResultStudentJob::dispatch(
+        StudentResultsPublisherJob::dispatch(
             $filePath,
             $deliberation,
-            $user
+            $request->user()
         );
 
-
-        return response()->json([
-            'state' => true
-        ]);
+        return response()->json(['state' => true]);
     }
 
     public function show(string $id)
@@ -67,7 +49,6 @@ class AdminResultController extends Controller
 
         return new ResultItemResource($result);
     }
-
 
     public function update(ResultRequest $request, string $id)
     {
@@ -84,9 +65,7 @@ class AdminResultController extends Controller
             'file' => $filePdf,
         ]);
 
-        return response()->json([
-            'state' => $state
-        ]);
+        return response()->json(['state' => $state]);
     }
 
     public function destroy(string $id)
@@ -95,8 +74,22 @@ class AdminResultController extends Controller
 
         $state = $result->delete();
 
-        return response()->json([
-            'state' => $state
-        ]);
+        return response()->json(['state' => $state]);
+    }
+
+    private function storeTempFile(\Illuminate\Http\UploadedFile $file): string
+    {
+        $tempPath = storage_path(self::TEMP_DIR);
+
+        if (!is_dir($tempPath)) {
+            mkdir($tempPath, 0755, true);
+        }
+
+        $filename = 'import_' . time() . '.xlsx';
+        $filePath = $tempPath . '/' . $filename;
+
+        $file->move($tempPath, $filename);
+
+        return $filePath;
     }
 }

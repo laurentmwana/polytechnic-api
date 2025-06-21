@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\SemesterEnum;
+use Illuminate\Validation\Rules\Enum;
+
 
 class CourseRequest extends BaseFormRequest
 {
@@ -34,6 +37,10 @@ class CourseRequest extends BaseFormRequest
                 'required',
                 'numeric',
                 'between:1,60'
+            ],
+            'semester' => [
+                'required',
+                new Enum(SemesterEnum::class)
             ],
             'teacher_id' => [
                 'required',
