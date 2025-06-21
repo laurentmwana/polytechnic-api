@@ -40,6 +40,7 @@ Route::name('^')->group(function () {
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
 
     Route::get('/notification/{id}', [NotificationController::class, 'show']);
+    Route::put('/mark-as-read/notification', [NotificationController::class, 'markAsRead']);
     Route::delete('/notification/{id}/destroy', [NotificationController::class, 'destroy']);
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/last-notification', [NotificationController::class, 'lastNotification']);
