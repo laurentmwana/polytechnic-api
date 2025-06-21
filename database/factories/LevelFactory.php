@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\LevelProgrammeEnum;
-use App\Models\Option;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +19,6 @@ class LevelFactory extends Factory
     public function definition(): array
     {
         return [
-            'option_id' => Option::all()->random()->id,
             'name' => fake()->sentence(),
             'alias' => fake()->name(),
             'programme' => fake()->randomElement(LevelProgrammeEnum::cases())->value,
