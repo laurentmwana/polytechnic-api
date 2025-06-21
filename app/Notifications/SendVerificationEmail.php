@@ -25,7 +25,7 @@ class SendVerificationEmail extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        return ['mail'];
     }
 
     /**
@@ -49,11 +49,6 @@ class SendVerificationEmail extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            'type' => 'email-verification',
-            'message' => 'Lien de vérification envoyé à ' . $notifiable->email,
-            'url' => SignedUrl::generateVerificationUrl($notifiable),
-            'sent_at' => now(),
-        ];
+        return [];
     }
 }

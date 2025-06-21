@@ -9,12 +9,9 @@ use App\Http\Resources\Year\YearCollectionResource;
 
 class AdminYearController extends Controller
 {
-
     public function index()
     {
-        $years = YearAcademic::orderBy('is_closed')
-
-            ->paginate();
+        $years = YearAcademic::orderBy('is_closed')->paginate();
 
         return YearCollectionResource::collection($years);
     }
@@ -30,23 +27,43 @@ class AdminYearController extends Controller
     {
         $year = YearAcademic::findOrFail($id);
 
-        $newYear = $this->getNewYear($year);
+        $newYear = $this->createNewYear($year);
 
-
-        return new YearItemResource($newYear);
+        return response()->json([
+            'state' => $newYear instanceof YearAcademic,
+        ]);
     }
 
-    private function getNewYear(YearAcademic $year): YearAcademic
+    private function createNewYear(YearAcademic $year): YearAcademic
     {
+        [$nameYear, $start, $end] = $this->getYearName($year);
+
+        $existingYear = YearAcademic::where('name', $nameYear)->first();
+
+        if ($existingYear) {
+            throw new \Exception("L'année académique $nameYear existe déjà.");
+        }
+
+        $newYear =  YearAcademic::create([
+            'start' => $start,
+            'end'   => $end,
+            'name'  => $nameYear,
+        ]);
+
         $year->update(['is_closed' => true]);
 
-        $start = $year->end;
-        $end = $year->end  + 1;
+        return $newYear;
+    }
 
-        return YearAcademic::create([
-            'start' => $end,
-            'end' => $end,
-            "name" => "{$start}-{$end}"
-        ]);
+    private function getYearName(YearAcademic $year): array
+    {
+        $start = $year->end;
+        $end = $year->end + 1;
+
+        return [
+            "{$start}-{$end}",
+            $start,
+            $end,
+        ];
     }
 }

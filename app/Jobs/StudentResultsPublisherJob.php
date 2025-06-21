@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Events\IsResultImportedEvent;
+use App\Events\AdminResultsEvent;
 use App\Imports\StudentResultsImport;
 use App\Models\Deliberation;
 use App\Models\User;
@@ -13,7 +13,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class PublishedResultStudentJob implements ShouldQueue
+class StudentResultsPublisherJob implements ShouldQueue
 {
     use Queueable, SerializesModels, InteractsWithQueue;
 
@@ -21,7 +21,7 @@ class PublishedResultStudentJob implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        private string $filePath, 
+        private string $filePath,
         private Deliberation $deliberation,
         private User $user
         )
@@ -33,14 +33,13 @@ class PublishedResultStudentJob implements ShouldQueue
      */
     public function handle(): void
     {
-        
         $spreadsheet = IOFactory::load($this->filePath);
         $sheetNames = $spreadsheet->getSheetNames();
 
         Excel::import(new StudentResultsImport(
             $sheetNames, $this->deliberation), $this->filePath);
 
-        event(new IsResultImportedEvent($this->deliberation, $this->user));
+        event(new AdminResultsEvent($this->deliberation, $this->user));
 
     }
 }
