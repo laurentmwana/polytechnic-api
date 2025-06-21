@@ -23,16 +23,12 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::post('email/verify/{opt}', VerifyEmailController::class)
-        ->middleware(['throttle:50,1'])
-        ->name('verify.opt');
-
     Route::post('confirm-password', ConfirmablePasswordController::class);
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
-    Route::post('verify-email/{id}/{hash}', VerifyEmailController::class)
+    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
