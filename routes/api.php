@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\Other\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MeController;
 use App\Http\Controllers\Api\Other\YearController;
 use App\Http\Controllers\Api\Other\LevelController;
 use App\Http\Controllers\Api\Other\CourseController;
-use App\Http\Controllers\Api\Other\OptionController;
 use App\Http\Controllers\Api\Other\TeacherController;
 use App\Http\Controllers\Api\Other\EventController;
 use App\Http\Controllers\Api\Other\DepartmentController;
@@ -38,6 +38,11 @@ Route::name('^')->group(function () {
 
     Route::get('/events', [EventController::class, 'index'])->name('event.index');
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
+
+    Route::get('/notification/{id}', [NotificationController::class, 'show']);
+    Route::delete('/notification/{id}/destroy', [NotificationController::class, 'destroy']);
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/last-notification', [NotificationController::class, 'lastNotification']);
 
     Route::middleware('auth')->group(function () {
 
