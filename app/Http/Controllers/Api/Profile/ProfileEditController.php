@@ -2,24 +2,29 @@
 
 namespace App\Http\Controllers\Api\Profile;
 
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\Auth\UserLoginResource;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileEditController extends Controller
 {
-    public function __invoke(ProfileUpdateRequest $request): JsonResponse
+    public function __invoke(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
-        return response()->json([
-            'state' => true,
-        ]);
+        $token = Auth::refresh();
+
+        $user->token = $token;
+
+        return new UserLoginResource($user);
     }
 }

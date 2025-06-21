@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\Student\ResultController;
 
 Route::prefix('/student')
     ->name('°')
-    ->middleware('auth')
+    ->middleware(['auth', 'student'])
     ->group(function () {
         
 

@@ -12,7 +12,7 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::with(['options'])
+        $departments = Department::with(['levels'])
             ->orderByDesc('updated_at')
             ->paginate();
 

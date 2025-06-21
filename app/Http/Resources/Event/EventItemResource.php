@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Department;
+namespace App\Http\Resources\Event;
 
-use App\Http\Resources\Level\LevelActionResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Option\OptionActionResource;
 
-class DepartmentItemResource extends JsonResource
+class EventItemResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +16,11 @@ class DepartmentItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'alias' => $this->alias,
-            'levels' => LevelActionResource::collection($this->levels),
+            'title' => $this->title,
+            'description' => $this->description,
+            'tags' => $this->tags,
+            'url' => $this->url,
+            'content' => $this->content,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

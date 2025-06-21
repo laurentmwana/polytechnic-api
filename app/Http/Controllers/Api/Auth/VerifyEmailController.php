@@ -2,32 +2,30 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use App\Models\OptUserVerified;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\JsonResponse;
 
 class VerifyEmailController extends Controller
 {
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(EmailVerificationRequest $request): JsonResponse
     {
-        $user = $request->user();
-
-        if ($user->hasVerifiedEmail()) {
+        if ($request->user()->hasVerifiedEmail()) {
             return response()->json([
-                'status' => 'is-verified',
-                'message' => 'Votre adresse e-mail a déjà été vérifiée.',
+                'status' => "already"
             ]);
         }
 
-        if ($user->markEmailAsVerified()) {
+        if ($request->user()->markEmailAsVerified()) {
+            /** @var \Illuminate\Contracts\Auth\MustVerifyEmail $user */
+            $user = $request->user();
+
             event(new Verified($user));
         }
 
         return response()->json([
-            'status' => 'verified',
-            'message' => 'Votre adresse e-mail a été vérifiée avec succès.',
+            'status' => "verified"
         ]);
     }
 }

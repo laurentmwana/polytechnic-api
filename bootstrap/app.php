@@ -54,4 +54,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, Request $request) {
             return response()->json(['message' => "unauthorized"], 401);
         });
+
+        $exceptions->render(function (\Exception $e, Request $request) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        });
     })->create();

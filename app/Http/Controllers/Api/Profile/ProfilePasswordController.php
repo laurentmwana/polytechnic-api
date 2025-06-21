@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Profile;
 
+use App\Notifications\UpdatePasswordUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -17,9 +18,15 @@ class ProfilePasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        $state = $request->user()->update([
+        $user = $request->user();
+
+        $state = $user->update([
             'password' => Hash::make($validated['password']),
         ]);
+
+        if ($state) {
+            $user->notify(new UpdatePasswordUser());
+        }
 
         return response()->json(['state' => $state]);
     }

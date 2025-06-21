@@ -6,7 +6,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Deliberation;
-use App\Models\User;
+use App\Models\User; 
 
 class IsResultImportedEvent
 {

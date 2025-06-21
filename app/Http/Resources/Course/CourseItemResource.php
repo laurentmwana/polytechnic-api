@@ -26,6 +26,7 @@ class CourseItemResource extends JsonResource
             'name' => $this->name,
             'code' => $this->code,
             'credits' => $this->credits,
+            'semester' => $this->semester,
             'teacher' => new TeacherActionResource($this->teacher),
             'level' => new LevelActionSecondaryResource($this->level),
             'created_at' => $this->created_at,

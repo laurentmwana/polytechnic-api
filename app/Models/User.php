@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\SendVerificationEmail;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -63,6 +64,10 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function student()
     {
         return $this->hasOne(Student::class);
+    }
+
+    public function sendEmailVerificationNotification() {
+        $this->notify(new SendVerificationEmail());
     }
 
 

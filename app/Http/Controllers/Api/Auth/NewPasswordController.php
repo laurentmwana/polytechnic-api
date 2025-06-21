@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\UpdatePasswordUser;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,6 +37,8 @@ class NewPasswordController extends Controller
                 ])->save();
 
                 event(new PasswordReset($user));
+
+                $user->notify(new UpdatePasswordUser());
             }
         );
 

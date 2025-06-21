@@ -16,7 +16,8 @@ class Student extends Model
         'gender',
         'phone',
         'registration_token',
-        'user_id'
+        'user_id',
+        'avatar'
     ];
 
 
@@ -34,7 +35,6 @@ class Student extends Model
     {
         return $this->hasMany(HistoricLevel::class);
     }
-
 
     public function courseFolloweds()
     {

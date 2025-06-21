@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Level;
+namespace App\Http\Resources\Notification;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LevelActionSecondaryResource extends JsonResource
+class NotificationCollectionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,9 @@ class LevelActionSecondaryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'alias' => $this->alias,
+            'data' => $this->data,
+            'read_at' => $this->read_at,
+            'created_at' => $this->created_at,
         ];
     }
 }
