@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Option;
+namespace App\Http\Resources\Event;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OptionActionResource extends JsonResource
+class EventCollectionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,10 @@ class OptionActionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'alias' => $this->alias,
+            'title' => $this->title,
+            'description' => $this->description,
+            'tags' => $this->tags,
+            'created_at' => $this->created_at,
         ];
     }
 }

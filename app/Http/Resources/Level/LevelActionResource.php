@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources\Level;
 
+use App\Http\Resources\Department\DepartmentActionResource;
 use Illuminate\Http\Request;
 use App\Http\Resources\Year\YearItemResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Option\OptionActionResource;
 
 class LevelActionResource extends JsonResource
 {
@@ -20,8 +20,7 @@ class LevelActionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'alias' => $this->alias,
-            'programme' => $this->programme,
-            'option' => new OptionActionResource($this->option),
+            'department' => new DepartmentActionResource($this->department),
             'year' => new YearItemResource($this->yearAcademic),
         ];
     }

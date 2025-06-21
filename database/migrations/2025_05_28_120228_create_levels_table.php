@@ -16,13 +16,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('alias');
-            $table->foreignId('option_id')
+            $table->foreignId('department_id')
+                ->nullable()
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->enum('programme', array_map(
-                fn(LevelProgrammeEnum $enum) => $enum->value,
-                LevelProgrammeEnum::cases(),
-            ));
             $table->timestamps();
         });
     }

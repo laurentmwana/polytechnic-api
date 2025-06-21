@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Level;
+namespace App\Http\Resources\Event;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LevelActionSecondaryResource extends JsonResource
+class EventActionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,10 @@ class LevelActionSecondaryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'alias' => $this->alias,
+            'title' => $this->title,
+            'description' => $this->description,
+            'tags' => $this->tags,
+            'url' => $this->url
         ];
     }
 }

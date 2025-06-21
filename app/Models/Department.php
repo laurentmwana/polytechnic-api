@@ -3,19 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Repositories\DepartmentRepository;
-use App\Http\Resources\Course\CourseActionResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Department extends Model
 {
     /** @use HasFactory<\Database\Factories\DepartmentFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'alias'];
+    protected $fillable = ['name', 'alias', 'description'];
 
-    public function options()
+    public function levels(): HasMany
     {
-        return $this->hasMany(Option::class);
+        return $this->hasMany(Level::class);
     }
 }

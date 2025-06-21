@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\Admin\AdminYearController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\AdminCourseController;
-use App\Http\Controllers\Api\Admin\AdminOptionController;
+use App\Http\Controllers\Api\Admin\AdminEventController;
 use App\Http\Controllers\Api\Admin\AdminStudentController;
 use App\Http\Controllers\Api\Admin\AdminTeacherController;
 use App\Http\Controllers\Api\Admin\AdminDepartmentController;
@@ -22,9 +22,6 @@ Route::prefix('admin')
             ->parameter('department', 'id')
             ->except(['destroy', 'store']);
 
-        Route::apiResource('option', AdminOptionController::class)
-            ->parameter('option', 'id');
-
         Route::get('/year-academic', [AdminYearController::class, 'index'])
             ->name('year.index');
         Route::get('/year-academic/{id}', [AdminYearController::class, 'show'])
@@ -35,9 +32,13 @@ Route::prefix('admin')
         Route::apiResource('user', AdminUserController::class)
             ->parameter('user', 'id');
 
+            
+        Route::apiResource('event', AdminEventController::class)
+            ->parameter('event', 'id');
+
             Route::apiResource('result', AdminResultController::class)
             ->parameter('result', 'id');
-            
+
         Route::post('/user/{id}/lock', [AdminUserController::class, 'lock'])
             ->name('user.lock');
 

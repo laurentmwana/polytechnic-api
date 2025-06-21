@@ -29,8 +29,8 @@ class DatabaseSeeder extends Seeder
         $this->call(DefaultSeeder::class);
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Glodi',
+            'email' => 'glodintumba50@gmail.com',
             'roles' => [RoleUserEnum::ADMIN->value],
         ]);
 
@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
 
         Teacher::factory(40)->create();
 
-        $year = YearAcademic::where('is_closed', '=', false)->first();
+        YearAcademic::where('is_closed', '=', false)->first();
 
         foreach (Student::all() as $student) {
 

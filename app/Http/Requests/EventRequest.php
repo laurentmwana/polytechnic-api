@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 
-class OptionRequest extends BaseFormRequest
+class EventRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,17 +21,17 @@ class OptionRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name' => [
+            'title' => [
                 'required',
                 'between:2,255'
             ],
-            'alias' => [
+            'description' => [
                 'required',
-                'between:2,255'
+                'between:100,9000'
             ],
-            'department_id' => [
+            'level_id' => [
                 'required',
-                'exists:departments,id'
+                'exists:leves,id'
             ],
         ];
     }

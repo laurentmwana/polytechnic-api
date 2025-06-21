@@ -11,10 +11,10 @@ class Level extends Model
     /** @use HasFactory<\Database\Factories\LevelFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'alias', 'option_id', 'programme'];
+    protected $fillable = ['name', 'alias', 'department_id'];
 
-    public function option(): BelongsTo
+    public function department(): BelongsTo
     {
-        return $this->belongsTo(Option::class);
+        return $this->belongsTo(Department::class);
     }
 }
