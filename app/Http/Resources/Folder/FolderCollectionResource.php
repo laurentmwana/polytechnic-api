@@ -2,13 +2,10 @@
 
 namespace App\Http\Resources\Folder;
 
+use App\Http\Resources\Result\ResultItemResource;
 use Illuminate\Http\Request;
-use App\Http\Resources\Year\YearItemResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Level\LevelActionResource;
-use App\Http\Resources\Course\CourseActionResource;
 use App\Http\Resources\CourseFollow\CourseFollowCollectionResource;
-use App\Http\Resources\Department\DepartmentActionResource;
 use App\Http\Resources\Level\CurrentLevelResource;
 
 class FolderCollectionResource extends JsonResource
@@ -28,7 +25,7 @@ class FolderCollectionResource extends JsonResource
             'phone' => $this->phone,
             'historic_levels' => CurrentLevelResource::collection($this->historicLevels),
             'actual_level' => new CurrentLevelResource($this->actualLevel),
-            'results' => [],
+            'results' => ResultItemResource::collection($this->results),
             'course_followeds' => CourseFollowCollectionResource::collection($this->courseFolloweds)
         ];
     }
