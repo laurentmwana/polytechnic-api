@@ -9,14 +9,16 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-
     public function index(Request $request)
     {
         $user = $request->user();
 
-        $notifications = $user->notifications()->paginate();
-        $countAllNotifications = $user->notifications()->count();
-        $countUnreadNotifications = $user->unreadNotifications()->count();
+        $notificationsQuery = $user?->notifications();
+        $unreadNotificationsQuery = $user?->unreadNotifications();
+
+        $notifications = $notificationsQuery ? $notificationsQuery->paginate() : collect();
+        $countAllNotifications = $notificationsQuery ? $notificationsQuery->count() : 0;
+        $countUnreadNotifications = $unreadNotificationsQuery ? $unreadNotificationsQuery->count() : 0;
 
         return NotificationCollectionResource::collection($notifications)
             ->additional([
@@ -30,17 +32,18 @@ class NotificationController extends Controller
         $limit = $request->query->getInt('limit', 6);
         $user = $request->user();
 
-        $countUnreadNotifications = $user->unreadNotifications()->count();
+        $unreadNotificationsQuery = $user?->unreadNotifications();
+        $notificationsQuery = $user?->notifications();
 
+        $countUnreadNotifications = $unreadNotificationsQuery ? $unreadNotificationsQuery->count() : 0;
 
-        $notifications = $user->notifications()
-            ->orderByDesc('created_at')
-            ->limit($limit)
-            ->get();
+        $notifications = $notificationsQuery
+            ? $notificationsQuery->orderByDesc('created_at')->limit($limit)->get()
+            : collect();
 
         return NotificationResource::collection($notifications)
             ->additional([
-                'unread' => $countUnreadNotifications
+                'unread' => $countUnreadNotifications,
             ]);
     }
 
@@ -48,9 +51,9 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
-        $notification = $user->notifications()->findOrFail($id);
+        $notification = $user?->notifications()?->findOrFail($id);
 
-        if ($notification->read_at === null) {
+        if ($notification && is_null($notification->read_at)) {
             $notification->markAsRead();
         }
 
@@ -61,7 +64,9 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
-        $user->unreadNotifications->markAsRead();
+        if ($user && $user->unreadNotifications) {
+            $user->unreadNotifications->markAsRead();
+        }
 
         return response()->json([
             'state' => true,
@@ -72,9 +77,9 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
-        $notification = $user->notifications()->findOrFail($id);
+        $notification = $user?->notifications()?->findOrFail($id);
 
-        $state = $notification->delete();
+        $state = $notification ? $notification->delete() : false;
 
         return response()->json([
             'state' => $state,

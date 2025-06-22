@@ -19,6 +19,7 @@ class EventActionResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'tags' => $this->tags,
+            'start_at' => $this->start_at,
             'url' => $this->url
         ];
     }

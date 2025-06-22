@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Level;
+use App\Models\YearAcademic;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,9 +18,15 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
+        $tags = ['Horaire', 'Délibération', "Décès d'un professeur"];
+
         return [
             'title' => fake()->sentence(),
             'description' => fake()->sentence(),
+            'content' => fake()->paragraph(3),
+            'level_id' => Level::all()->random()->id,
+            'year_academic_id' => YearAcademic::all()->random()->id,
+            'tags' => [fake()->randomElement($tags)]
         ];
     }
 }

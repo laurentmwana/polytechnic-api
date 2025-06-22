@@ -11,11 +11,19 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::with(['level'])
-            ->orderByDesc('updated_at')
-            ->paginate();
+        $builder = Event::with(['level', 'yearAcademic']);
 
-        return EventCollectionResource::collection($events);
+        $events = $builder->orderByDesc('updated_at')->paginate();
+
+        $lastEvent = $builder
+            ->where('start_at', '>', now())
+            ->orderByDesc('updated_at')
+            ->first();
+
+        return EventCollectionResource::collection($events)
+            ->additional([
+                'lastEvent' => $lastEvent
+            ]);
     }
 
 

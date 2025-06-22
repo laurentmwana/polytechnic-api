@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
 
 class EventRequest extends BaseFormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Détermine si l'utilisateur est autorisé à effectuer cette requête.
      */
     public function authorize(): bool
     {
@@ -14,25 +15,46 @@ class EventRequest extends BaseFormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Règles de validation appliquées à la requête.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
             'title' => [
                 'required',
-                'between:2,255'
+                'string',
+                'between:2,255',
             ],
             'description' => [
                 'required',
-                'between:100,9000'
+                'string',
+                'between:100,9000',
+            ],
+            'content' => [
+                'required',
+                'string',
+                'min:100',
             ],
             'level_id' => [
                 'required',
-                'exists:leves,id'
+                'integer',
+                'exists:levels,id',
             ],
+            'year_academic_id' => [
+                'nullable',
+                'integer',
+                'exists:year_academics,id',
+            ],
+            'url' => [
+                'nullable',
+                'url',
+            ],
+
+            'tags' => [
+                'array',
+            ]
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
 use App\Http\Resources\Event\EventItemResource;
 use App\Http\Resources\Event\EventCollectionResource;
+use Illuminate\Support\Str;
 
 class AdminEventController extends Controller
 {
@@ -22,7 +23,10 @@ class AdminEventController extends Controller
 
     public function store(EventRequest $request)
     {
-        $event = Event::create($request->validated());
+        $event = Event::create([
+            ...$request->validated(),
+            'content' => Str::markdown($request->validated('content'))
+        ]);
 
         NewEventJob::dispatch($event);
 
@@ -43,7 +47,10 @@ class AdminEventController extends Controller
     {
         $event = Event::findOrFail($id);
 
-        $state = $event->update($request->validated());
+        $state = $event->update([
+            ...$request->validated(),
+            'content' => Str::markdown($request->validated('content'))
+        ]);
 
         return response()->json([
             'state' => $state

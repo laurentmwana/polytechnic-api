@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TargetEventENum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,6 +23,11 @@ return new class extends Migration
             $table->foreignId('level_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->foreignId('year_academic_id')
+                ->nullable()
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

@@ -24,8 +24,8 @@ class NewEventJob implements ShouldQueue
      */
     public function handle(): void
     {
-         $students = Student::with('user')
-        ->whereHas('actual_levels', function ($query) {
+         $students = Student::with(['user'])
+        ->whereHas('actualLevel', function ($query) {
             $query->where('level_id', $this->event->level_id);
         })
         ->get();
