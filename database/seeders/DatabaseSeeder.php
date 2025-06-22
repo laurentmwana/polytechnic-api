@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Event;
 use App\Models\Result;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -72,7 +73,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(JurySeeder::class);
 
-
         foreach (Student::all() as $student) {
 
             $deliberations = Deliberation::where('level_id', '=', $student->actualLevel->level_id)
@@ -87,5 +87,8 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+
+        Event::factory(20)->create();
     }
 }

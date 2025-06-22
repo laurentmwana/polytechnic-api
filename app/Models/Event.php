@@ -11,11 +11,18 @@ class Event extends Model
     /** @use HasFactory<\Database\Factories\EventFactory> */
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'description', 'tags', 'start_at'];
+    protected $fillable = [
+        'title', 'content', 'description', 'tags', 'start_at', 'file', 'level_id', 'year_academic_id', 'targets'
+    ];
 
     public function level(): BelongsTo
     {
         return $this->belongsTo(Level::class);
+    }
+
+    public function yearAcademic(): BelongsTo
+    {
+        return $this->belongsTo(YearAcademic::class);
     }
 
 
