@@ -20,20 +20,27 @@ use Database\Seeders\DefaultSeeder;
 
 class DatabaseSeeder extends Seeder
 {
+    private const ADMIN_USERS = [
+        ['name' => 'graciella', 'email' => "graciellamabs@gmail.com"],
+        ['name' => 'glodi', 'email' => "glodintumba50@gmail.com"],
+        ['name' => 'yves', 'email' => "yvesmetena137@gmail.com"],
+        ['name' => 'joel', 'email' => "joeltshipamba2024@gmail.com"],
+    ];
+
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $this->call(DefaultSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Glodi',
-            'email' => 'glodintumba50@gmail.com',
-            'roles' => [RoleUserEnum::ADMIN->value],
-        ]);
+        foreach (self::ADMIN_USERS as $value) {
+            User::factory()->create([
+                ...$value,
+                'roles' => [RoleUserEnum::ADMIN->value],
+            ]);
+        }
+
 
         User::factory(20)->create([
             'roles' => [RoleUserEnum::STUDENT->value],
