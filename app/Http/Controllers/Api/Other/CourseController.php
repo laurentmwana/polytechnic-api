@@ -12,40 +12,29 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-
     public function index(Request $request)
     {
-        $semesters = [
-            's1' => SemesterEnum::SEMESTER_1,
-            's2' => SemesterEnum::SEMESTER_2,
-        ];
         $semester = $request->query->get('semester');
         $search = $request->query->get('search');
 
         $builder = Course::with(['teacher', 'level']);
 
-        if ($semester) {
+        if (!empty($semester) && isset($semesters[$semester])) {
             if (!isset($semesters[$semester])) {
                 abort(401, "Nous n'avons pas trouvé le semestre $semester");
             }
-            $semesterValue = $semesters[$semester];
-            $builder->where('semester', '=', $semesterValue);
+
+            $builder->where('semester', '=', QUERY_SEMESTERS[$semester]);
         }
 
         if ($search && !empty($search)) {
-            $builder = SearchData::handle($builder, $search, [
-                'id',
-                'name',
-                'credits'
-            ]);
+            $builder = SearchData::handle($builder, $search, SEARCH_FIELDS_COURSE);
         }
-
 
         $courses = $builder->orderByDesc('updated_at')->paginate();
 
         return CourseCollectionResource::collection($courses);
     }
-
 
     public function show(string $id)
     {

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Student;
 use App\Models\ActualLevel;
+use App\Services\SearchData;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Imports\StudentsImport;
 use App\Http\Controllers\Controller;
@@ -17,10 +20,20 @@ use App\Http\Resources\Student\StudentCollectionResource;
 class AdminStudentController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with(['actualLevel'])->orderByDesc('updated_at')
-            ->paginate();
+        $builder = Student::with(['actualLevel', 'user'])
+            ->orderByDesc('updated_at');
+
+        $search = $request->query->get('search');
+
+        if (!empty($search)) {
+            $builder->where(function (Builder $query) use ($search) {
+                SearchData::handle($query, $search, SEARCH_FIELDS_STUDENT);
+            });
+        }
+
+        $students = $builder->paginate();
 
         return StudentCollectionResource::collection($students);
     }

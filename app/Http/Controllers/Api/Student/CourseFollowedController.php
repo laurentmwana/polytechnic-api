@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Student;
 
 use App\Models\Course;
 use App\Models\YearAcademic;
+use App\Services\SearchData;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\CourseFollowed;
 use App\Http\Controllers\Controller;
@@ -15,11 +17,28 @@ class CourseFollowedController extends Controller
     {
         $user = $request->user();
 
-        $paids = CourseFollowed::with(['student', 'yearAcademic', 'course'])
-            ->where('student_id', '=', $user->student->id)
-            ->orderByDesc('updated_at')->paginate();
+        $user->load('student');
 
-        return CourseFollowCollectionResource::collection($paids);
+        $builder = CourseFollowed::with(['student', 'yearAcademic', 'course'])
+            ->where('student_id', '=', $user->student->id)
+            ->orderByDesc('updated_at');
+
+        $search = $request->query->get('search');
+
+        if (!empty($search)) {
+            $builder->where(function (Builder $query) use ($search) {
+                SearchData::handle($query, $search, SEARCH_FIELDS_COURSE_FOLLOW);
+                $query->orWhereHas('yearAcademic', function ($q) use ($search) {
+                    SearchData::handle($q, $search, SEARCH_FIELDS_YEAR);
+                })->orWhereHas('course', function ($q) use ($search) {
+                    SearchData::handle($q, $search, SEARCH_FIELDS_COURSE);
+                });
+            });
+        }
+
+        $courses  =  $builder->paginate();
+
+        return CourseFollowCollectionResource::collection($courses);
     }
 
     public function follow(string $id, Request $request)

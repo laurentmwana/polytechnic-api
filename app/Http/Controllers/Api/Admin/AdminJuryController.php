@@ -8,14 +8,33 @@ use App\Http\Requests\JuryRequest;
 use App\Http\Resources\Jury\JuryItemResource;
 use App\Http\Resources\Jury\JuryActionResource;
 use App\Http\Resources\Jury\JuryCollectionResource;
+use App\Services\SearchData;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class AdminJuryController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $juries = Jury::with(['deliberation', 'teacher'])->orderByDesc('updated_at')
-            ->paginate();
+        $builder = Jury::with(['deliberation', 'teacher'])
+            ->orderByDesc('updated_at');
+
+        $search = $request->query->get('search');
+
+        if (!empty($search)) {
+            $builder->where(function (Builder $query) use ($search) {
+                SearchData::handle($query, $search, SEARCH_FIELDS_EVENT);
+
+                $query->orWhereHas('deliberation', function ($q) use ($search) {
+                    SearchData::handle($q, $search, SEARCH_FIELDS_DELIBE);
+                })->orWhereHas('teacher', function ($q) use ($search) {
+                    SearchData::handle($q, $search, SEARCH_FIELDS_TEACHER);
+                });
+            });
+        }
+
+        $juries = $builder->paginate();
 
         return JuryCollectionResource::collection($juries);
     }

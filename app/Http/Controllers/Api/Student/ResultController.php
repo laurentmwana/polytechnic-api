@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Student;
 
 use App\Models\Student;
 use App\Models\Result;
+use App\Services\SearchData;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Result\ResultCollectionResource;
@@ -17,16 +19,28 @@ class ResultController extends Controller
     {
         $user = $request->user();
 
-        $student = Student::where('user_id', '=', $user->id)
+        $builder = Student::where('user_id', '=', $user->id)
             ->first();
 
-        if (!$student) {
+        if (!$builder) {
             return response()->json([
                 'data' => []
             ]);
         }
 
-        $results = $student->results()->paginate();
+
+         $search = $request->query->get('search');
+
+        if (!empty($search)) {
+            $builder->where(function (Builder $query) use ($search) {
+                SearchData::handle($query, $search, SEARCH_FIELDS_RESULT);
+                $query->orWhereHas('deliberation', function ($q) use ($search) {
+                    SearchData::handle($q, $search, SEARCH_FIELDS_DELIBE);
+                });
+            });
+        }
+
+        $results = $builder->paginate();
 
         return ResultCollectionResource::collection($results);
     }
@@ -52,7 +66,7 @@ class ResultController extends Controller
 
         elseif (!$result->is_paid_labo && $result->is_paid_academic) {
             throw new \Exception("Vous n'êtes pas en ordre vec le frais de labo");
-        }    
+        }
 
         return $this->downloadFile($result);
 
