@@ -14,10 +14,6 @@ class CourseController extends Controller
 {
     public function index(Request $request)
     {
-        $semesters = [
-            's1' => SemesterEnum::SEMESTER_1,
-            's2' => SemesterEnum::SEMESTER_2,
-        ];
         $semester = $request->query->get('semester');
         $search = $request->query->get('search');
 
@@ -28,7 +24,7 @@ class CourseController extends Controller
                 abort(401, "Nous n'avons pas trouvé le semestre $semester");
             }
 
-            $builder->where('semester', '=', $semesters[$semester]);
+            $builder->where('semester', '=', QUERY_SEMESTERS[$semester]);
         }
 
         if ($search && !empty($search)) {

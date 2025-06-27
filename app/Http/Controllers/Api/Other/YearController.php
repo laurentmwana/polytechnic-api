@@ -13,15 +13,12 @@ use Illuminate\Http\Request;
 class YearController extends Controller
 {
 
-
-    private const ORDER = ['asc', 'desc'];
-
     public function index(Request $request)
     {
 
         $orderClosed = $request->query->get('closed', 'asc');
 
-        if (!in_array($orderClosed, self::ORDER)) $orderClosed = 'asc';
+        if (!in_array($orderClosed, FILTER_ORDERS)) $orderClosed = 'asc';
 
         $builder = YearAcademic::orderByDesc($orderClosed);
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Jobs\StudentResultsPublisherJob;
 use App\Models\Result;
 use App\Models\Deliberation;
+use App\Services\SearchData;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResultRequest;
@@ -21,7 +23,23 @@ class AdminResultController extends Controller
 
     public function index(Request $request)
     {
-        $results = Result::paginate();
+        $builder = Result::with(['student', 'deliberation'])
+            ->orderByDesc('updated_at');
+
+        $search = $request->query->get('search');
+
+        if (!empty($search)) {
+            $builder->where(function (Builder $query) use ($search) {
+                SearchData::handle($query, $search, SEARCH_FIELDS_LEVEL);
+                $query->orWhereHas('student', function ($q) use ($search) {
+                    SearchData::handle($q, $search, SEARCH_FIELDS_STUDENT);
+                })->orWhereHas('deliberation', function ($q) use ($search) {
+                    SearchData::handle($q, $search, SEARCH_FIELDS_DELIBE);
+                });
+            });
+        }
+
+        $results = $builder->paginate();
 
         return ResultCollectionResource::collection($results);
     }

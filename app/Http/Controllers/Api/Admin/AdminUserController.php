@@ -7,21 +7,36 @@ use App\Models\Student;
 use App\Enums\RoleUserEnum;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
+use App\Services\SearchData;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\User\UserItemResource;
 use App\Http\Resources\User\UserCollectionResource;
 
 class AdminUserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['student'])
+        $builder = User::with(['student'])
             ->where(function ($builder) {
                 $builder->where('roles', 'like', '%' . RoleUserEnum::STUDENT->value . '%')
                     ->orWhere('roles', 'like', '%' . RoleUserEnum::DISABLE->value . '%');
             })
-            ->orderByDesc('updated_at')
-            ->paginate(15);
+            ->orderByDesc('updated_at');
+
+        $search = $request->query->get('search');
+
+        if (!empty($search)) {
+            $builder->where(function (Builder $query) use ($search) {
+                SearchData::handle($query, $search, SEARCH_FIELDS_USER);
+                $query->orWhereHas('student', function ($q) use ($search) {
+                    SearchData::handle($q, $search, SEARCH_FIELDS_STUDENT);
+                });
+            });
+        }
+
+        $users = $builder->paginate();
 
         return UserCollectionResource::collection($users);
     }

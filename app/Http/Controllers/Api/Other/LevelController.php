@@ -22,7 +22,7 @@ class LevelController extends Controller
         if (!empty($search)) {
             $builder->where(function (Builder $query) use ($search) {
                 SearchData::handle($query, $search, SEARCH_FIELDS_LEVEL);
-                 $query->orWhereHas('yearAcademic', function ($q) use ($search) {
+                 $query->orWhereHas('department', function ($q) use ($search) {
                     SearchData::handle($q, $search, SEARCH_FIELDS_DEPARTMENT);
                 });
             });

@@ -24,11 +24,6 @@ class DeliberationController extends Controller
             return DeliberationCollectionResource::collection($builder->take($limit)->get());
         }
 
-        $semesters = [
-            's1' => SemesterEnum::SEMESTER_1,
-            's2' => SemesterEnum::SEMESTER_2,
-        ];
-
         $search = $request->query->get('search');
         $semester = $request->query->get('semester');
 
@@ -51,7 +46,7 @@ class DeliberationController extends Controller
                 ], 400); // Code HTTP 400 pour erreur client
             }
 
-            $semesterValue = $semesters[$semester];
+            $semesterValue = QUERY_SEMESTERS[$semester];
             $builder->where('semester', $semesterValue);
         }
 
