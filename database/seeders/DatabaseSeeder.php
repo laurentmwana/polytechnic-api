@@ -21,10 +21,11 @@ use Database\Seeders\DefaultSeeder;
 class DatabaseSeeder extends Seeder
 {
     private const ADMIN_USERS = [
-        ['name' => 'graciella', 'email' => "graciellamabs@gmail.com"],
-        ['name' => 'glodi', 'email' => "glodintumba50@gmail.com"],
-        ['name' => 'yves', 'email' => "yvesmetena137@gmail.com"],
-        ['name' => 'joel', 'email' => "joeltshipamba2024@gmail.com"],
+        ['name' => 'Graciella', 'email' => "graciellamabs@gmail.com"],
+        ['name' => 'Glodi', 'email' => "glodintumba50@gmail.com"],
+        ['name' => 'Yves', 'email' => "yvesmetena137@gmail.com"],
+        ['name' => 'Joel', 'email' => "joeltshipamba2024@gmail.com"],
+        ['name' => 'Labeya', 'email' => "laurentmwn@gmail.com"],
     ];
 
     /**
