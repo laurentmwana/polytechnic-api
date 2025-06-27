@@ -12,22 +12,6 @@ use Illuminate\Http\Request;
 
 class LevelController extends Controller
 {
-    private const SEARCH_FIELDS_LEVEL = [
-        'name',
-        'id',
-        'alias',
-        'created_at',
-        'updated_at',
-    ];
-
-    private const SEARCH_FIELDS_DEPARTMENT = [
-        'name',
-        'id',
-        'alias',
-        'created_at',
-        'updated_at',
-    ];
-
     public function index(Request $request)
     {
         $builder = Level::with(['department'])
@@ -37,9 +21,9 @@ class LevelController extends Controller
 
         if (!empty($search)) {
             $builder->where(function (Builder $query) use ($search) {
-                SearchData::handle($query, $search, self::SEARCH_FIELDS_LEVEL);
+                SearchData::handle($query, $search, SEARCH_FIELDS_LEVEL);
                  $query->orWhereHas('yearAcademic', function ($q) use ($search) {
-                    SearchData::handle($q, $search, self::SEARCH_FIELDS_DEPARTMENT);
+                    SearchData::handle($q, $search, SEARCH_FIELDS_DEPARTMENT);
                 });
             });
         }

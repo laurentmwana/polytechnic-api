@@ -12,15 +12,7 @@ use Illuminate\Http\Request;
 
 class YearController extends Controller
 {
-    private const SEARCH_FIELDS_YEAR = [
-        'name',
-        'id',
-        'start',
-        'end',
-        'is_closed',
-        'created_at',
-        'updated_at',
-    ];
+
 
     private const ORDER = ['asc', 'desc'];
 
@@ -35,7 +27,7 @@ class YearController extends Controller
 
         if (!empty($search)) {
             $builder->where(function (Builder $query) use ($search) {
-                SearchData::handle($query, $search, self::SEARCH_FIELDS_YEAR);
+                SearchData::handle($query, $search, SEARCH_FIELDS_YEAR);
             });
         }
 

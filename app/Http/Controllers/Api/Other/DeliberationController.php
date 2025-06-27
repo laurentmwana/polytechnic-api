@@ -13,33 +13,6 @@ use Illuminate\Http\Request;
 
 class DeliberationController extends Controller
 {
-    private const SEARCH_FIELDS_DELIBE = [
-        'year_academic_id',
-        'id',
-        'semester',
-        'created_at',
-        'updated_at',
-        'start_at',
-        'level_id'
-    ];
-
-    private const SEARCH_FIELDS_YEAR = [
-        'year_academic_id',
-        'id',
-        'name',
-        'start',
-        'end',
-        'created_at',
-        'updated_at',
-    ];
-
-    private const SEARCH_FIELDS_LEVEL = [
-        'name',
-        'id',
-        'alias',
-        'created_at',
-        'updated_at',
-    ];
 
     public function index(Request $request)
     {
@@ -61,12 +34,12 @@ class DeliberationController extends Controller
 
         if (!empty($search)) {
             $builder->where(function (Builder $query) use ($search) {
-                SearchData::handle($query, $search, self::SEARCH_FIELDS_DELIBE);
+                SearchData::handle($query, $search, SEARCH_FIELDS_DELIBE);
 
                 $query->orWhereHas('yearAcademic', function ($q) use ($search) {
-                    SearchData::handle($q, $search, self::SEARCH_FIELDS_YEAR);
+                    SearchData::handle($q, $search, SEARCH_FIELDS_YEAR);
                 })->orWhereHas('level', function ($q) use ($search) {
-                    SearchData::handle($q, $search, self::SEARCH_FIELDS_LEVEL);
+                    SearchData::handle($q, $search, SEARCH_FIELDS_LEVEL);
                 });
             });
         }
