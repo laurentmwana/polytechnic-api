@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-
     public function index(Request $request)
     {
         $semesters = [
@@ -24,12 +23,11 @@ class CourseController extends Controller
 
         $builder = Course::with(['teacher', 'level']);
 
-        if ($semester) {
+        if ($semester && !empty($semester)) {
             if (!isset($semesters[$semester])) {
                 abort(401, "Nous n'avons pas trouvé le semestre $semester");
             }
-            $semesterValue = $semesters[$semester];
-            $builder->where('semester', '=', $semesterValue);
+      cz
         }
 
         if ($search && !empty($search)) {
@@ -45,7 +43,6 @@ class CourseController extends Controller
 
         return CourseCollectionResource::collection($courses);
     }
-
 
     public function show(string $id)
     {
