@@ -23,11 +23,12 @@ class CourseController extends Controller
 
         $builder = Course::with(['teacher', 'level']);
 
-        if ($semester && !empty($semester)) {
+        if (!empty($semester) && isset($semesters[$semester])) {
             if (!isset($semesters[$semester])) {
                 abort(401, "Nous n'avons pas trouvé le semestre $semester");
             }
-      cz
+
+            $builder->where('semester', '=', $semesters[$semester]);
         }
 
         if ($search && !empty($search)) {
