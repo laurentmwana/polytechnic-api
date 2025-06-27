@@ -102,3 +102,11 @@ define('SEARCH_FIELDS_COURSE_FOLLOW', [
     'updated_at',
 ]);
 
+
+define('SEARCH_FIELDS_ACTUALITY', [
+    'id',
+    'title',
+    'description',
+    'created_at',
+    'updated_at',
+]);
