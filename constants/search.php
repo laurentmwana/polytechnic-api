@@ -64,12 +64,32 @@ define('SEARCH_FIELDS_TEACHER', [
     'updated_at',
 ]);
 
-define('SEARCH_FIELDS_YEAR', [
-    'name',
+
+define('SEARCH_FIELDS_STUDENT', [
     'id',
-    'start',
-    'end',
-    'is_closed',
+    'name',
+    'firstname',
+    'gender',
+    'phone',
+    'registration_token',
     'created_at',
     'updated_at',
 ]);
+
+define('SEARCH_FIELDS_USER', [
+    'id',
+    'name',
+    'email',
+    'created_at',
+    'updated_at',
+]);
+
+define('SEARCH_FIELDS_RESULT', [
+    'is_eligible',
+    'id',
+    'is_paid_labo',
+    'is_paid_academic',
+    'created_at',
+    'updated_at',
+]);
+
