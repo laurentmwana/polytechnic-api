@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminActualityController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Admin\AdminJuryController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
@@ -32,7 +33,9 @@ Route::prefix('admin')
         Route::apiResource('user', AdminUserController::class)
             ->parameter('user', 'id');
 
-            
+        Route::apiResource('actuality', AdminActualityController::class)
+            ->parameter('actuality', 'id');
+
         Route::apiResource('event', AdminEventController::class)
             ->parameter('event', 'id');
 
