@@ -30,7 +30,7 @@ class AdminResultController extends Controller
 
         if (!empty($search)) {
             $builder->where(function (Builder $query) use ($search) {
-                SearchData::handle($query, $search, SEARCH_FIELDS_LEVEL);
+                SearchData::handle($query, $search, SEARCH_FIELDS_RESULT);
                 $query->orWhereHas('student', function ($q) use ($search) {
                     SearchData::handle($q, $search, SEARCH_FIELDS_STUDENT);
                 })->orWhereHas('deliberation', function ($q) use ($search) {

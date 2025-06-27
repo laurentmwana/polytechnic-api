@@ -1,6 +1,6 @@
 <?php
 
-define('SEARCH_FIELD_COURSE', [
+define('SEARCH_FIELDS_COURSE', [
     'id',
     'name',
     'credits',
@@ -89,6 +89,15 @@ define('SEARCH_FIELDS_RESULT', [
     'id',
     'is_paid_labo',
     'is_paid_academic',
+    'created_at',
+    'updated_at',
+]);
+
+define('SEARCH_FIELDS_COURSE_FOLLOW', [
+    'id',
+    'student_id',
+    'course_id',
+    'year_academic_id',
     'created_at',
     'updated_at',
 ]);

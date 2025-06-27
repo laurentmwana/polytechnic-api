@@ -28,7 +28,7 @@ class CourseController extends Controller
         }
 
         if ($search && !empty($search)) {
-            $builder = SearchData::handle($builder, $search, SEARCH_FIELD_COURSE);
+            $builder = SearchData::handle($builder, $search, SEARCH_FIELDS_COURSE);
         }
 
         $courses = $builder->orderByDesc('updated_at')->paginate();
