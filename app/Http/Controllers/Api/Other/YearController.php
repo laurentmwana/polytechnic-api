@@ -6,13 +6,40 @@ use App\Models\YearAcademic;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Year\YearItemResource;
 use App\Http\Resources\Year\YearCollectionResource;
+use App\Services\SearchData;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class YearController extends Controller
 {
-    public function index()
+    private const SEARCH_FIELDS_YEAR = [
+        'name',
+        'id',
+        'start',
+        'end',
+        'is_closed',
+        'created_at',
+        'updated_at',
+    ];
+
+    private const ORDER = ['asc', 'desc'];
+
+    public function index(Request $request)
     {
-        $years = YearAcademic::orderBy('is_closed')
-            ->paginate();
+
+        $orderClosed = $request->query->get('closed', 'asc');
+
+        if (!in_array($orderClosed, self::ORDER)) $orderClosed = 'asc';
+
+        $builder = YearAcademic::orderByDesc($orderClosed);
+
+        if (!empty($search)) {
+            $builder->where(function (Builder $query) use ($search) {
+                SearchData::handle($query, $search, self::SEARCH_FIELDS_YEAR);
+            });
+        }
+
+        $years = $builder->paginate();
 
         return YearCollectionResource::collection($years);
     }
