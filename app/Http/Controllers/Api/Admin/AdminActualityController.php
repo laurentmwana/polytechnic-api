@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Resources\Actuality\ActualityItemResource;
+use App\Jobs\NewActualityJob;
 use App\Models\Actuality;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActualityRequest;
@@ -32,7 +33,13 @@ class AdminActualityController extends Controller
 
     public function store(ActualityRequest $request)
     {
+        $user = $request->user();
+
         $actuality = Actuality::create($request->validated());
+
+        if ($actuality instanceof Actuality) {
+            NewActualityJob::dispatch($actuality, $user);
+        }
 
         return response()->json([
             'state' => $actuality !== null,
