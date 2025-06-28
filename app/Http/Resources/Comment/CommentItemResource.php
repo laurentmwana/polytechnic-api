@@ -18,6 +18,7 @@ class CommentItemResource extends JsonResource
         return [
             'id' => $this->id,
             'message' => $this->message,
+            'username' => $this->username,
             'user' => new UserMeResource($this->user),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

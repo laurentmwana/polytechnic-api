@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_lock')->default(false);
             $table->foreignId('actuality_id')
                 ->constrained()
                 ->cascadeOnDelete();
             $table->foreignId('user_id')
+                ->nullable()
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->string('username');
             $table->text('message');
             $table->timestamps();
         });

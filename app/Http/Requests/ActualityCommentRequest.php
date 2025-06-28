@@ -30,6 +30,13 @@ class ActualityCommentRequest extends BaseFormRequest
                 'string',
                 'between:5,9000',
             ],
+
+            'username' => [
+                'required',
+                'string',
+                'between:3,13',
+            ],
+
         ];
     }
 }

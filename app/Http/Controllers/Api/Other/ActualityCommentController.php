@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ActualityCommentRequest;
 use App\Models\Actuality;
 use App\Models\Comment;
+use App\Models\User;
 
 class ActualityCommentController extends Controller
 {
@@ -19,23 +20,13 @@ class ActualityCommentController extends Controller
         $actuality = Actuality::findOrFail($id);
 
         $comment = $actuality->comments()->create([
-            ...$request->validated(),
-            'user_id' => $user->id
+            'message' => $request->validated('message'),
+            'username' => $user instanceof User ? $user->name : $request->validated('username'),
+            'user_id' => $user instanceof User  ? $user->id : null
         ]);
 
         return response()->json([
             'state' => $comment !== null
-        ]);
-    }
-
-     public function lock(string $id)
-    {
-        $comment = Comment::findOrFail($id);
-
-        $comment->update(['is_lock' => !$comment->is_lock]);
-
-        return response()->json([
-            'state' => $comment
         ]);
     }
 }

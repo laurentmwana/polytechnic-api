@@ -15,9 +15,15 @@ class ActualityController extends Controller
 
     public function index(Request $request)
     {
-        $builder = Actuality::with(['likes', 'comments']);
+        $search = $request->input('search');
+        $order = $request->input('order', 'desc');
 
-        $builder = $builder->orderByDesc('updated_at');
+        if (!in_array($order, FILTER_ORDERS)) $order = 'desc';
+
+        $builder = Actuality::with(['comments'])
+            ->orderBy('updated_at', $order);
+
+
 
         if (!empty($search)) {
             $builder->where(function (Builder $query) use ($search) {
@@ -31,10 +37,15 @@ class ActualityController extends Controller
     }
 
 
+
     public function show(string $id)
     {
-        $actuality = Actuality::findOrFail($id);
+        $actuality = Actuality::with(['comments' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])
+        ->findOrFail($id);
 
         return new ActualityItemResource($actuality);
     }
+
 }
