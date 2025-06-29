@@ -15,12 +15,11 @@ class AdminActualityController extends Controller
 {
     public function index(Request $request)
     {
-        $builder = Actuality::with(['teacher', 'level'])
-            ->orderByDesc('updated_at');
 
         $search = $request->query->get('search');
 
-        $builder = Actuality::with(['likes', 'comments']);
+        $builder = Actuality::with(['comments'])
+            ->orderBy('updated_at' , 'desc');
 
         if ($search && !empty($search)) {
            SearchData::handle($builder, $search, SEARCH_FIELDS_ACTUALITY);
