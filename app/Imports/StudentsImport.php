@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Student;
 use App\Models\Level;
 use App\Models\YearAcademic;
+use App\Notifications\NewStudent;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -51,7 +52,7 @@ class StudentsImport implements ToModel, WithHeadingRow, WithValidation
             'year_academic_id' => $row['year']
         ]);
 
-
+        $user->notify(new NewStudent());
 
         return $student;
     }

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Actuality;
+use App\Models\Comment;
 use App\Models\Event;
 use App\Models\Result;
 use App\Models\User;
@@ -43,15 +45,13 @@ class DatabaseSeeder extends Seeder
         }
 
 
-        User::factory(20)->create([
+        $users = User::factory(20)->create([
             'roles' => [RoleUserEnum::STUDENT->value],
         ])->each(function (User $user) {
             Student::factory()->create(['user_id' => $user]);
         });
 
         Teacher::factory(40)->create();
-
-        YearAcademic::where('is_closed', '=', false)->first();
 
         foreach (Student::all() as $student) {
 
@@ -96,7 +96,26 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-
         Event::factory(20)->create();
+
+        $actualities = Actuality::factory(30)->create();
+
+        foreach ($users as $user) {
+            for ($i=0; $i < 5 ; $i++) {
+                $actuality = Actuality::all()->random();
+                Comment::factory()->create([
+                    'actuality_id' => $actuality->id,
+                    'user_id' => $user->id,
+                ]);
+            }
+        }
+
+        foreach ($actualities as $actuality) {
+           for ($i=0; $i < 20 ; $i++) {
+                Comment::factory()->create([
+                    'actuality_id' => $actuality->id
+                ]);
+           }
+        }
     }
 }

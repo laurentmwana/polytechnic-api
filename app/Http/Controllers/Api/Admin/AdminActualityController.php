@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Resources\Actuality\ActualityItemResource;
+use App\Jobs\NewActualityJob;
 use App\Models\Actuality;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActualityRequest;
@@ -14,12 +15,11 @@ class AdminActualityController extends Controller
 {
     public function index(Request $request)
     {
-        $builder = Actuality::with(['teacher', 'level'])
-            ->orderByDesc('updated_at');
 
         $search = $request->query->get('search');
 
-        $builder = Actuality::with(['likes', 'comments']);
+        $builder = Actuality::with(['comments'])
+            ->orderBy('updated_at' , 'desc');
 
         if ($search && !empty($search)) {
            SearchData::handle($builder, $search, SEARCH_FIELDS_ACTUALITY);
@@ -32,7 +32,13 @@ class AdminActualityController extends Controller
 
     public function store(ActualityRequest $request)
     {
+        $user = $request->user();
+
         $actuality = Actuality::create($request->validated());
+
+        if ($actuality instanceof Actuality) {
+            NewActualityJob::dispatch($actuality, $user);
+        }
 
         return response()->json([
             'state' => $actuality !== null,

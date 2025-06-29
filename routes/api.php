@@ -39,8 +39,9 @@ Route::name('^')->group(function () {
     Route::get('/courses', [CourseController::class, 'index'])->name('course.index');
     Route::get('/course/{id}', [CourseController::class, 'show'])->name('course.show');
 
-    Route::get('/actuality', [ActualityController::class, 'index'])->name('actuality.index');
+    Route::get('/actualities', [ActualityController::class, 'index'])->name('actuality.index');
     Route::get('/actuality/{id}', [ActualityController::class, 'show'])->name('actuality.show');
+    Route::post('/actuality/{id}/comment', [ActualityCommentController::class, 'store'])->name('actuality.comment');
 
     Route::get('/events', [EventController::class, 'index'])->name('event.index');
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
@@ -53,10 +54,6 @@ Route::name('^')->group(function () {
 
     Route::middleware('auth')->group(function () {
 
-        Route::post('/actuality/{id}/like', ActualityLikeController::class)->name('actuality.like');
-        Route::post('/actuality/{id}/comment', [ActualityCommentController::class, 'store'])->name('actuality.comment');
-        Route::post('/comment/{id}/lock', [ActualityCommentController::class, 'lock'])->name('comment.lock')
-            ->middleware(['admin']);
 
         Route::get('/me', MeController::class)->name('me');
 

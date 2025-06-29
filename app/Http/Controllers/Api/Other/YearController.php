@@ -20,7 +20,7 @@ class YearController extends Controller
 
         if (!in_array($orderClosed, FILTER_ORDERS)) $orderClosed = 'asc';
 
-        $builder = YearAcademic::orderByDesc($orderClosed);
+        $builder = YearAcademic::orderBy('is_closed', $orderClosed);
 
         if (!empty($search)) {
             $builder->where(function (Builder $query) use ($search) {
