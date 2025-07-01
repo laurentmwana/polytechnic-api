@@ -4,20 +4,15 @@ namespace Database\Seeders;
 
 use App\Models\Actuality;
 use App\Models\Comment;
-use App\Models\Event;
-use App\Models\Result;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Level;
 use App\Models\Course;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Enums\RoleUserEnum;
 use App\Models\ActualLevel;
-use App\Models\Deliberation;
 use App\Models\YearAcademic;
 use Illuminate\Database\Seeder;
-use Database\Seeders\JurySeeder;
 use Database\Seeders\DefaultSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -76,27 +71,6 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-
-        Deliberation::factory(20)->create();
-
-        $this->call(JurySeeder::class);
-
-        foreach (Student::all() as $student) {
-
-            $deliberations = Deliberation::where('level_id', '=', $student->actualLevel->level_id)
-                ->get();
-
-            foreach ($deliberations as $deliberation) {
-                Result::create([
-                    'deliberation_id' => $deliberation->id,
-                    'student_id' => $student->id,
-                    'is_eligible' => true,
-                    'file'=> 'demo.pdf'
-                ]);
-            }
-        }
-
-        Event::factory(20)->create();
 
         $actualities = Actuality::factory(30)->create();
 

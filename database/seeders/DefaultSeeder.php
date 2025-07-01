@@ -10,10 +10,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DefaultSeeder extends Seeder
 {
-
-
     private const DEPARTMENTS = [
-        ['name' => 'Génie électrique'],
+        ['name' => 'Génie électrique', 'alias' => 'GE'],
     ];
 
     private const YEARS = [

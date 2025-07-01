@@ -8,16 +8,16 @@ use App\Models\Level;
 class DepartmentObserver
 {
     private const LEVEL_BASE = [
-        ['name' => 'Licence 1 LMD', 'alias' => 'L1 LMD'],
+        ['name' => 'Licence 1', 'alias' => 'L1'],
     ];
 
     private const LEVELS = [
-        ['name' => 'Licence 2 LMD', 'alias' => 'L2 LMD'],
-        ['name' => 'Licence 2 LMD', 'alias' => 'L3 LMD'],
-        ['name' => 'Master 1 LMD', 'alias' => 'M1 LMD'],
-        ['name' => 'Master 1 LMD', 'alias' => 'M2 LMD'],
-        ['name' => 'Doctorat 1  LMD', 'alias' => 'D1 LMD'],
-        ['name' => 'Doctorat 2  LMD', 'alias' => 'D2 LMD'],
+        ['name' => 'Licence 2', 'alias' => 'L2'],
+        ['name' => 'Licence 3', 'alias' => 'L3'],
+        ['name' => 'Master 1', 'alias' => 'M1'],
+        ['name' => 'Master 1', 'alias' => 'M2'],
+        ['name' => 'Doctorat 1 ', 'alias' => 'D1'],
+        ['name' => 'Doctorat 2 ', 'alias' => 'D2'],
     ];
 
     /**
@@ -29,7 +29,10 @@ class DepartmentObserver
             ->firstOrCreate(self::LEVEL_BASE[0]);
 
         foreach (self::LEVELS as $value) {
-            $department->levels()->create($value);
+            $department->levels()->create([
+                'name' => $value['name'] .' '. $department->alias,
+                'alias' => $value['alias'] .' '. $department->alias,
+            ]);
         }
     }
 }

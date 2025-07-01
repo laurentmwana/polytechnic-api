@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Result extends Model
 {
     protected $fillable = [
-        'deliberation_id', 
-        'student_id', 
-        'is_eligible', 
+        'deliberation_id',
+        'student_id',
+        'is_eligible',
         'file',
         'is_paid_labo',
-        'is_paid_academic'
+        'is_paid_academic',
+        'is_paid_enrollment'
     ];
 
     public function deliberation()

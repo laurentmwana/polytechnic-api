@@ -2,134 +2,208 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Bulletin - {{ $infos['mention'] ?? '' }}</title>
+    <title>Relevé des Cotes - {{ $infos['nom'] ?? '' }} {{ $infos['postnom'] ?? '' }}</title>
+    <!-- Import Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <style>
+        /* Variables CSS pour faciliter la personnalisation */
+        :root {
+            --color-primary: #003366;
+            --color-secondary: #f0f0f0;
+            --color-text: #222;
+            --color-accent: #007acc;
+            --font-family: 'Inter', Arial, sans-serif;
+            --font-size-base: 12px;
+            --line-height-base: 1.5;
+            --border-color: #bbb;
+            --border-thickness: 1px;
+        }
+
+        /* Reset léger */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 30px;
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            line-height: var(--line-height-base);
+            background-color: #fff;
+        }
+
+        /* En-têtes */
+        .header h1, .header h2 {
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 4px 0;
+            color: var(--color-primary);
+        }
+
+        .header h1 {
+            font-size: 18px;
+        }
+
+        .header h2 {
+            font-size: 14px;
+            margin-top: 20px;
+            border-top: 2px solid var(--color-primary);
+            padding-top: 10px;
+        }
+
+        /* Sections centrées */
+        .header, .academic-info {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .academic-info {
+            margin: 20px 0;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--color-primary);
+        }
+
+        /* Tableau */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            border: var(--border-thickness) solid var(--border-color);
+            padding: 8px 12px;
+            font-size: 11px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: var(--color-secondary);
+            font-weight: 700;
+            color: var(--color-primary);
+            letter-spacing: 0.05em;
+        }
+
+        /* Alignement spécifique */
+        td:nth-child(2) {
+            text-align: left;
+        }
+
+        /* Lignes alternées pour plus de lisibilité */
+        tbody tr:nth-child(odd) {
+            background-color: #fafafa;
+        }
+
+        /* Résumé final */
+        .summary {
+            margin-top: 30px;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--color-primary);
+        }
+
+        .summary div {
+            margin: 12px 0;
+        }
+
+        .summary .details {
+            font-weight: 400;
+            font-size: 11px;
+            margin-top: 10px;
+            color: var(--color-text);
+        }
+
+        /* Signature */
+        .signature {
+            margin-top: 50px;
+            text-align: right;
+            font-size: 11px;
+            color: var(--color-text);
+        }
+
+        .signature strong {
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+    </style>
 </head>
-<body style="font-family: Inter, sans-serif; margin: 20px; font-size: 14px; color: black; line-height: 1.4; background-color: white;">
+<body>
 
-    <!-- En-tête -->
-    <div style="text-align: center; border-bottom: 2px solid black; padding-bottom: 20px; margin-bottom: 30px;">
-        <h1 style="margin: 0; font-size: 26px; font-weight: bold; color: black; margin-bottom:15px;">FACULTE POLYTECHNIQUE</h1>
-        <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: black;">BULLETIN ACADÉMIQUE</h1>
-        <div style="margin: 10px 0 0 0; font-size: 16px; color: black;">
-            {{ $infos['mention'] ?? '' }} - Année {{ $deliberation->yearAcademic->name ?? '' }}
-        </div>
+    <!-- En-tête officiel -->
+    <div class="header">
+        <h1>UNIVERSITE DE KINSHASA</h1>
+        <h1>FACULTE POLYTECHNIQUE</h1>
+        <h2>RELEVE DES COTES DE L'ETUDIANT {{ strtoupper($infos['nom'] ?? '') }} {{ strtoupper($infos['postnom'] ?? '') }}</h2>
     </div>
 
-       <div style="margin-bottom: 30px;">
-        <h2 style="background-color: black; color: white; padding: 10px; margin: 0 0 15px 0; font-size: 16px; font-weight: bold;">
-            INFORMATIONS ÉTUDIANT
-        </h2>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-            <tr>
-                <td style="width: 25%; padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Nom :</td>
-                <td style="width: 25%; padding: 10px; border: 1px solid black;">{{ $infos['noms'] ?? '' }}</td>
-                <td style="width: 25%; padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Promotion :</td>
-                <td style="width: 25%; padding: 10px; border: 1px solid black;">
-                    {{ $deliberation->level->name ?? '' }} [{{ $deliberation->level->alias ?? '' }}]
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Année académique :</td>
-                <td style="padding: 10px; border: 1px solid black;">{{ $deliberation->yearAcademic->name ?? '' }}</td>
-                <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Semestre :</td>
-                <td style="padding: 10px; border: 1px solid black;">{{ $deliberation->semester }}</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Matricule :</td>
-                <td style="padding: 10px; border: 1px solid black;">{{ $infos['matricule'] ?? '' }}</td>
-                <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Éligible :</td>
-                <td style="padding: 10px; border: 1px solid black;">
-                    {{ isset($is_eligible) ? ($is_eligible ? 'Oui' : 'Non') : ($infos['eligible'] ?? '-') }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Paiement Labo :</td>
-                <td style="padding: 10px; border: 1px solid black;">
-                    {{ isset($is_paid_labo) ? ($is_paid_labo ? 'Oui' : 'Non') : '-' }}
-                </td>
-                <td style="padding: 10px; border: 1px solid black; font-weight: bold; background-color: #f5f5f5;">Paiement Académique :</td>
-                <td style="padding: 10px; border: 1px solid black;">
-                    {{ isset($is_paid_academic) ? ($is_paid_academic ? 'Oui' : 'Non') : '-' }}
-                </td>
-            </tr>
-        </table>
+    <!-- Informations académiques -->
+    <div class="academic-info">
+        <div>ANNEE ACADEMIQUE : {{ $deliberation->yearAcademic->name ?? '2023-2024' }}</div>
+        <div>{{ strtoupper($deliberation->semester ?? 'DEUXIEME SESSION') }}</div>
     </div>
 
-    <!-- Section Résultats UE -->
-    <div style="margin-bottom: 30px;">
-        <h2 style="background-color: black; color: white; padding: 10px; margin: 0 0 15px 0; font-size: 16px; font-weight: bold;">
-            RÉSULTATS DES UNITÉS D'ENSEIGNEMENT
-        </h2>
-        <table style="border-collapse: collapse; width: 100%; border: 1px solid black;">
-            <thead>
-                <tr style="background-color: black;">
-                    <th style="color: white; font-weight: bold; font-size: 12px; padding: 10px; text-align: left; border: 1px solid black;">Code UE</th>
-                    <th style="color: white; font-weight: bold; font-size: 12px; padding: 10px; text-align: left; border: 1px solid black;">Intitulé</th>
-                    <th style="color: white; font-weight: bold; font-size: 12px; padding: 10px; text-align: left; border: 1px solid black;">Catégorie</th>
-                    <th style="color: white; font-weight: bold; font-size: 12px; padding: 10px; text-align: left; border: 1px solid black;">Crédit</th>
-                    <th style="color: white; font-weight: bold; font-size: 12px; padding: 10px; text-align: left; border: 1px solid black;">Moyenne</th>
+    <!-- Tableau des cours -->
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">NR</th>
+                <th style="width: 45%;">INTITULE DU COURS</th>
+                <th style="width: 12%;">HRS<br>TH/TP</th>
+                <th style="width: 12%;">AN/20</th>
+                <th style="width: 12%;">EX/20</th>
+                <th style="width: 11%;">MOY/20</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($courses as $course)
+                <tr>
+                    <td>{{ $course['numero'] ?? '' }}</td>
+                    <td>{{ $course['intitule'] ?? '' }}</td>
+                    <td>{{ $course['hrs_thtp'] ?? '' }}</td>
+                    <td>{{ $course['note_an'] ?? '' }}</td>
+                    <td>{{ $course['note_ex'] ?? '' }}</td>
+                    <td><strong>{{ $course['moyenne'] ?? '' }}</strong></td>
                 </tr>
-            </thead>
-            <tbody>
-                @forelse($ues as $index => $ue)
-                    <tr style="{{ $index % 2 == 0 ? 'background-color: #f5f5f5;' : 'background-color: white;' }}">
-                        <td style="padding: 8px; text-align: left; border: 1px solid black;">{{ $ue['code_ue'] ?? '-' }}</td>
-                        <td style="padding: 8px; text-align: left; border: 1px solid black;">{{ $ue['intitule'] ?? '-' }}</td>
-                        <td style="padding: 8px; text-align: left; border: 1px solid black;">{{ $ue['categorie'] ?? '-' }}</td>
-                        <td style="padding: 8px; text-align: left; border: 1px solid black;">{{ $ue['credit'] ?? '-' }}</td>
-                        <td style="padding: 8px; text-align: left; border: 1px solid black;">{{ $ue['moyenne'] ?? '-' }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" style="text-align:center; padding: 10px;">Aucune UE trouvée</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+            @empty
+                <tr>
+                    <td colspan="6">Aucun cours trouvé</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 
-    <!-- Section Synthèse -->
-    <div style="margin-bottom: 30px;">
-        <h2 style="background-color: black; color: white; padding: 10px; margin: 0 0 15px 0; font-size: 16px; font-weight: bold;">
-            SYNTHÈSE DES RÉSULTATS
-        </h2>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-            <tr>
-                <td style="width: 50%; padding: 15px; text-align: center; border: 1px solid black; background-color: #f5f5f5;">
-                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 5px;">MOYENNE CATÉGORIE A</div>
-                    <div style="font-size: 20px; font-weight: bold; color: black;">{{ $summary['moyenne_categorie_a'] ?? '-' }}</div>
-                </td>
-                <td style="width: 50%; padding: 15px; text-align: center; border: 1px solid black; background-color: #f5f5f5;">
-                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 5px;">MOYENNE CATÉGORIE B</div>
-                    <div style="font-size: 20px; font-weight: bold; color: black;">{{ $summary['moyenne_categorie_b'] ?? '-' }}</div>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 15px; text-align: center; border: 1px solid black; background-color: #f5f5f5;">
-                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 5px;">MOYENNE SEMESTRE</div>
-                    <div style="font-size: 20px; font-weight: bold; color: black;">{{ $summary['moyenne_semestre'] ?? '-' }}</div>
-                </td>
-                <td style="padding: 15px; text-align: center; border: 1px solid black; background-color: #f5f5f5;">
-                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 5px;">CRÉDITS ECTS</div>
-                    <div style="font-size: 20px; font-weight: bold; color: black;">{{ $summary['credits_capitaliser'] ?? '-' }}</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="padding: 15px; text-align: center; border: 1px solid black; background-color: black; color: white;">
-                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 5px;">DÉCISION DU JURY</div>
-                    <div style="font-size: 18px; font-weight: bold;">{{ $summary['decision'] ?? 'EN ATTENTE' }}</div>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- Pied de page -->
-    <div style="border-top: 1px solid black; padding-top: 15px; text-align: center; font-size: 12px; color: black;">
-        <div style="margin-bottom: 5px; font-weight: bold;">
-            Document généré automatiquement le {{ now()->format('d/m/Y à H:i') }}
+    <!-- Résumé final -->
+    <div class="summary">
+        <div class="details">
+            <div>
+                POURCENTAGE :
+                @php
+                    $pourcentage = $summary['pourcentage'] ?? '';
+                    // Ajout du % s'il n'est pas présent
+                    if ($pourcentage !== '' && strpos($pourcentage, '%') === false) {
+                        $pourcentage .= '%';
+                    }
+                @endphp
+                {{ $pourcentage }}
+            </div>
+            <div>CREDITS CAPITALISER : {{ $summary['credits_cap'] ?? '' }}</div>
+            <div>STATUS : {{ $summary['status'] ?? '' }}</div>
+            @if(isset($summary['frais_academique']) || isset($summary['frais_labo']) || isset($summary['enrollment']))
+                <div>FRAIS ACADEMIQUE : {{ $summary['frais_academique'] ?? 'NON' }}</div>
+                <div>FRAIS LABO : {{ $summary['frais_labo'] ?? 'NON' }}</div>
+                <div>FRAIS INSCRIPTION : {{ $summary['enrollment'] ?? 'NON' }}</div>
+            @endif
         </div>
-        <div style="font-style: italic;">
-            Ce document est confidentiel et destiné uniquement à l'étudiant concerné
+    </div>
+
+    <!-- Signature -->
+    <div class="signature">
+        <div style="margin-top: 80px;">
+            <div>Prés. du Jury, <strong>{{ $infos['mention'] ?? 'GÉNIE ÉLECTRIQUE' }}</strong></div>
         </div>
     </div>
 
