@@ -128,28 +128,26 @@ class StudentSheetImport implements ToCollection
 
     protected function extractSummary(Collection $rows): array
     {
+        $found = false;
         foreach ($rows as $row) {
             $firstCell = strtoupper(trim($row[0] ?? ''));
-
-            if ($firstCell === 'POURCENTAGE') {
-                continue;
-            }
-
-            if (strpos($firstCell, '%') !== false || is_numeric(str_replace(['%', ' '], '', explode(' ', $firstCell)[0]))) {
+            if ($found) {
+                // On est sur la ligne juste après "POURCENTAGE"
                 return [
                     'pourcentage'      => $row[0] ?? null,
-                    'decision'         => $row[1] ?? null,
-                    'status'           => $row[2] ?? null,
+                    'credits_cap'         => $row[1] ?? null,
+                    'status'         => $row[2] ?? null,
                     'frais_academique' => $row[3] ?? null,
                     'frais_labo'       => $row[4] ?? null,
                     'enrollment'       => $row[5] ?? null,
                 ];
             }
+            if ($firstCell === 'POURCENTAGE') {
+                $found = true;
+            }
         }
-
         return [];
     }
-
     protected function findStudent(string $matricule): ?Student
     {
         return Student::with('actualLevel')
@@ -200,6 +198,9 @@ class StudentSheetImport implements ToCollection
             'student_id' => $studentId,
         ];
 
+        // On récupère l'ancien résultat s'il existe
+        $existingResult = Result::where($attributes)->first();
+
         $values = [
             'file'               => $filename,
             'is_eligible'        => $eligible,
@@ -208,14 +209,17 @@ class StudentSheetImport implements ToCollection
             'is_paid_enrollment' => $enrollment,
         ];
 
-        $result =  Result::updateOrCreate($attributes, $values);
+        // Met à jour ou crée
+        $result = Result::updateOrCreate($attributes, $values);
 
-        $result->updated(function (Result $afterUpdate) use ($filename) {
-            app(PublicFileUpload::class)->delete($afterUpdate->file);
-        });
+        // Si un ancien fichier existait et qu'il est différent du nouveau, on le supprime
+        if ($existingResult && $existingResult->file !== $filename) {
+            app(PublicFileUpload::class)->delete($existingResult->file);
+        }
 
         return $result;
     }
+
 
     protected function notifyStudent(Student $student, Result $result): void
     {
