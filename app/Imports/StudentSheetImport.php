@@ -1,14 +1,18 @@
 <?php
+
 namespace App\Imports;
 
 use App\Models\Student;
 use App\Models\Deliberation;
 use App\Models\Result;
+use App\Notifications\ResultAvailable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Facades\Log;
+use App\Services\Upload\PublicFileUpload;
 
 class StudentSheetImport implements ToCollection
 {
@@ -16,117 +20,210 @@ class StudentSheetImport implements ToCollection
 
     public function collection(Collection $rows)
     {
-        $studentData = [];
-        $ues = [];
-        $summary = [];
-        $matricule = null;
-        $eligible = null;
-        $paid = null;
+        $studentData = $this->extractStudentData($rows);
 
-        $parsingUes = false;
-        $parsingSummary = false;
+        if (!$studentData) {
+            Log::warning('Données étudiant manquantes ou invalides.');
+            throw new \RuntimeException("Le fichier Excel ne contient pas les données de l'étudiant.");
+        }
 
+        $courses = $this->extractCourses($rows);
+        $summary = $this->extractSummary($rows);
+
+        $matricule = $studentData['matricule'];
+        $eligible = strtoupper(trim($studentData['eligible'])) === 'OUI';
+        $paidAcademic = strtoupper(trim($summary['frais_academique'] ?? '')) === 'OUI';
+        $paidLabo = strtoupper(trim($summary['frais_labo'] ?? '')) === 'OUI';
+        $enrollment = strtoupper(trim($summary['enrollment'] ?? '')) === 'OUI';
+
+        if (!$matricule) {
+            Log::warning('Matricule manquant dans le fichier Excel', [
+                'studentData' => $studentData,
+                'file_content' => $rows->take(10)->toArray(),
+            ]);
+
+            throw new \RuntimeException("Le matricule est manquant dans le fichier Excel.");
+        }
+
+        $student = $this->findStudent($matricule);
+
+        if (!$student) {
+            $errorMessage = "Étudiant avec le matricule {$matricule} non trouvé dans la promotion « {$this->deliberation->level->name} » pour l'année académique.";
+
+            Log::error($errorMessage, [
+                'matricule' => $matricule,
+                'level_id' => $this->deliberation->level_id,
+                'year_academic_id' => $this->deliberation->year_academic_id,
+            ]);
+
+            throw new \RuntimeException($errorMessage);
+        }
+
+        $filename = $this->generatePdf($studentData, $courses, $summary, $eligible, $paidAcademic, $paidLabo, $enrollment);
+
+        $result = $this->saveResult($student->id, $filename, $eligible, $paidAcademic, $paidLabo, $enrollment);
+
+        Log::info("Relevé de cotes généré pour l'étudiant {$matricule}", [
+            'student_id' => $student->id,
+            'courses_count' => count($courses),
+            'filename' => $filename,
+        ]);
+
+        $this->notifyStudent($student, $result);
+    }
+
+    protected function extractStudentData(Collection $rows): ?array
+    {
         foreach ($rows as $i => $row) {
             $firstCell = strtoupper(trim($row[0] ?? ''));
 
-            // Ligne des infos
-            if ($firstCell === 'NOMS') {
-                $studentData = [
-                    'noms'      => $rows[$i + 1][0] ?? null,
-                    'mention'   => $rows[$i + 1][1] ?? null,
-                    'matricule' => $rows[$i + 1][2] ?? null,
-                    'eligible'  => $rows[$i + 1][3] ?? null,
-                    'paid'      => $rows[$i + 1][4] ?? null,
+            if ($firstCell === 'NOM' && isset($rows[$i + 1])) {
+                $dataRow = $rows[$i + 1];
+
+                return [
+                    'nom'       => trim($dataRow[0] ?? ''),
+                    'postnom'   => trim($dataRow[1] ?? ''),
+                    'matricule' => trim($dataRow[2] ?? ''),
+                    'genre'     => trim($dataRow[3] ?? ''),
+                    'mention'   => trim($dataRow[4] ?? ''),
+                    'eligible'  => trim($dataRow[5] ?? ''),
                 ];
-                $matricule = $studentData['matricule'];
-                $eligible = strtoupper(trim($studentData['eligible'])) === 'OUI';
-                $paid = $studentData['paid'] ?? null;
+            }
+        }
+
+        return null;
+    }
+
+    protected function extractCourses(Collection $rows): array
+    {
+        $courses = [];
+        $parsingCourses = false;
+
+        foreach ($rows as $row) {
+            $firstCell = strtoupper(trim($row[0] ?? ''));
+
+            if ($firstCell === 'NR') {
+                $parsingCourses = true;
                 continue;
             }
 
-            // Début des UEs
-            if ($firstCell === 'Labo / Académique' || $firstCell === 'CODE UE') {
-                $parsingUes = true;
-                continue;
-            }
+            if ($parsingCourses) {
+                if (!is_numeric($row[0] ?? '')) {
+                    break;
+                }
 
-            // Début du résumé
-            if ($firstCell === 'MOYENNE CATEGORIE A') {
-                $parsingUes = false;
-                $parsingSummary = true;
-                continue;
-            }
-
-            // Résumé : ligne suivante après l'entête
-            if ($parsingSummary && !empty($row[0]) && is_numeric($row[0])) {
-                $summary = [
-                    'moyenne_categorie_a' => $row[0] ?? null,
-                    'moyenne_categorie_b' => $row[1] ?? null,
-                    'moyenne_semestre'    => $row[2] ?? null,
-                    'credits_capitaliser' => $row[3] ?? null,
-                    'decision'            => $row[4] ?? null,
+                $courses[] = [
+                    'numero'   => $row[0] ?? null,
+                    'intitule' => $row[1] ?? null,
+                    'hrs_thtp' => $row[2] ?? null,
+                    'note_an'  => $row[3] ?? null,
+                    'note_ex'  => $row[4] ?? null,
+                    'moyenne'  => $row[5] ?? null,
                 ];
-                $parsingSummary = false;
+            }
+        }
+
+        return $courses;
+    }
+
+    protected function extractSummary(Collection $rows): array
+    {
+        foreach ($rows as $row) {
+            $firstCell = strtoupper(trim($row[0] ?? ''));
+
+            if ($firstCell === 'POURCENTAGE') {
                 continue;
             }
 
-            // UEs
-            if ($parsingUes && !empty($row[0]) && strpos($row[0], 'UE') === 0) {
-                $ues[] = [
-                    'code_ue'   => $row[0] ?? null,
-                    'intitule'  => $row[1] ?? null,
-                    'categorie' => $row[2] ?? null,
-                    'credit'    => $row[3] ?? null,
-                    'moyenne'   => $row[4] ?? null,
+            if (strpos($firstCell, '%') !== false || is_numeric(str_replace(['%', ' '], '', explode(' ', $firstCell)[0]))) {
+                return [
+                    'pourcentage'      => $row[0] ?? null,
+                    'decision'         => $row[1] ?? null,
+                    'status'           => $row[2] ?? null,
+                    'frais_academique' => $row[3] ?? null,
+                    'frais_labo'       => $row[4] ?? null,
+                    'enrollment'       => $row[5] ?? null,
                 ];
-                continue;
             }
         }
 
-        if (!$matricule) {
-            \Log::warning('Matricule manquant.', [$rows->toArray()]);
-            return;
-        }
+        return [];
+    }
 
-        $student = Student::where('registration_token', $matricule)->first();
-        if (!$student) {
-            \Log::warning("Étudiant introuvable pour matricule : $matricule");
-            return;
-        }
+    protected function findStudent(string $matricule): ?Student
+    {
+        return Student::with('actualLevel')
+            ->where('registration_token', $matricule)
+            ->whereHas('actualLevel', function ($query) {
+                $query->where('level_id', $this->deliberation->level_id)
+                      ->where('year_academic_id', $this->deliberation->year_academic_id);
+            })
+            ->first();
+    }
 
-        // Gestion des paiements labo/académique
-        $isPaidLabo = false;
-        $isPaidAcademic = false;
-        if ($paid && str_contains($paid, '/')) {
-            [$paidLabo, $paidAcademic] = array_map('trim', explode('/', $paid));
-            $isPaidLabo = strtoupper($paidLabo) === 'OUI';
-            $isPaidAcademic = strtoupper($paidAcademic) === 'OUI';
-        }
-
-        // Générer PDF
+    protected function generatePdf(
+        array $studentData,
+        array $courses,
+        array $summary,
+        bool $eligible,
+        bool $paidAcademic,
+        bool $paidLabo,
+        bool $enrollment
+    ): string {
         $pdf = Pdf::loadView('pdf.student', [
             'infos'            => $studentData,
-            'ues'              => $ues,
+            'courses'          => $courses,
             'summary'          => $summary,
             'deliberation'     => $this->deliberation,
             'is_eligible'      => $eligible,
-            'is_paid_labo'     => $isPaidLabo,
-            'is_paid_academic' => $isPaidAcademic,
+            'is_paid_academic' => $paidAcademic,
+            'is_paid_labo'     => $paidLabo,
+            'enrollment'       => $enrollment,
         ]);
 
-        $fileId = $matricule . '-' . Str::random(20);
-        $filename = 'results/' . $fileId . '.pdf';
+        $filename = 'results/' . $studentData['matricule'] . '-' . Str::random(20) . '.pdf';
         Storage::disk('public')->put($filename, $pdf->output());
 
-        Result::create([
-            'file'              => $filename,
-            'student_id'        => $student->id,
-            'deliberation_id'   => $this->deliberation->id,
-            'is_eligible'       => $eligible ?? false,
-            'is_paid_labo'      => $isPaidLabo,
-            'is_paid_academic'  => $isPaidAcademic,
-        ]);
+        return $filename;
+    }
 
-        \Log::info("Résultat enregistré pour $matricule");
+    protected function saveResult(
+        int $studentId,
+        string $filename,
+        bool $eligible,
+        bool $paidAcademic,
+        bool $paidLabo,
+        bool $enrollment
+    ): Result {
+        $attributes = [
+            'deliberation_id' => $this->deliberation->id,
+            'student_id' => $studentId,
+        ];
+
+        $values = [
+            'file'               => $filename,
+            'is_eligible'        => $eligible,
+            'is_paid_academic'   => $paidAcademic,
+            'is_paid_labo'       => $paidLabo,
+            'is_paid_enrollment' => $enrollment,
+        ];
+
+        $result =  Result::updateOrCreate($attributes, $values);
+
+        $result->updated(function (Result $afterUpdate) use ($filename) {
+            app(PublicFileUpload::class)->delete($afterUpdate->file);
+        });
+
+        return $result;
+    }
+
+    protected function notifyStudent(Student $student, Result $result): void
+    {
+        try {
+            $student->user->notify(new ResultAvailable($result));
+            Log::info("Notification envoyée à l'étudiant {$student->registration_token}");
+        } catch (\Exception $e) {
+            Log::error("Erreur lors de l'envoi de la notification à l'étudiant {$student->registration_token}: {$e->getMessage()}");
+        }
     }
 }

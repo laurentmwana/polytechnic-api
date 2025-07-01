@@ -21,6 +21,8 @@ class ResultCollectionResource extends JsonResource
             'deliberation' => new DeliberationActionResource($this->deliberation),
             'student' => new StudentActionResource($this->student),
             'is_eligible' => $this->is_eligible,
+            'is_paid_labo' => $this->is_paid_labo,
+            'is_paid_enrollment' => $this->is_paid_enrollment,
             'created_at' => $this->created_at,
         ];
     }
