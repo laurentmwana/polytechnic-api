@@ -21,7 +21,8 @@ class AdminCourseController extends Controller
         $semester = $request->query->get('semester');
         $search = $request->query->get('search');
 
-        $builder = Course::with(['teacher', 'level']);
+        $builder = Course::with(['teacher', 'level'])
+            ->orderByDesc('updated_at');
 
         if (!empty($semester) && isset($semesters[$semester])) {
             if (!isset($semesters[$semester])) {

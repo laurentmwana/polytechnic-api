@@ -14,7 +14,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StudentRequest;
 use App\Http\Requests\StudentExcelRequest;
 use App\Http\Resources\Student\StudentItemResource;
-use App\Http\Resources\Student\StudentActionResource;
 use App\Http\Resources\Student\StudentCollectionResource;
 
 class AdminStudentController extends Controller
