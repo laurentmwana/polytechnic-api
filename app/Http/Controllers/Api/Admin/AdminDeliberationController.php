@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Services\SearchData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Models\Deliberation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DeliberationRequest;
@@ -46,10 +45,7 @@ class AdminDeliberationController extends Controller
 
     public function store(DeliberationRequest $request)
     {
-        $deliberation = Deliberation::create([
-            ...$request->validated(),
-            'criteria' => Str::markdown($request->validated('criteria')),
-        ]);
+        $deliberation = Deliberation::create($request->validated());
 
         return response()->json([
             'state' => $deliberation !== null,
@@ -66,11 +62,7 @@ class AdminDeliberationController extends Controller
     public function update(DeliberationRequest $request, string $id)
     {
         $deliberation = Deliberation::findOrFail($id);
-
-        $state = $deliberation->update([
-            ...$request->validated(),
-            'criteria' => Str::markdown($request->validated('criteria')),
-        ]);
+        $state = $deliberation->update($request->validated());
 
         return response()->json([
             'state' => $state
