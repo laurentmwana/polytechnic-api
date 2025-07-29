@@ -30,7 +30,7 @@ class EventRequest extends BaseFormRequest
             'description' => [
                 'required',
                 'string',
-                'between:100,9000',
+                'between:10,255',
             ],
             'content' => [
                 'required',
@@ -50,10 +50,12 @@ class EventRequest extends BaseFormRequest
             'url' => [
                 'nullable',
                 'url',
+                'max:255'
             ],
 
             'tags' => [
                 'array',
+                'between:1,5'
             ]
         ];
     }
